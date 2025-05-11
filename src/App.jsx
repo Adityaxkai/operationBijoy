@@ -1,13 +1,11 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { Navbar } from './components/Navbar';
-import { ImageSlider } from './components/ImageSlider';
 import { Home } from './pages/Home';
 import { Members } from './pages/Members';
 import { Events } from './pages/Events';
 import { Coaching } from './pages/Coaching';
 import { Finances } from './pages/Finances';
 import { Attendance } from './pages/Attendance';
-
+import { Navbar } from './components/Navbar';
 // A wrapper to conditionally show components based on route
 function AppContent() {
   const location = useLocation();
@@ -16,7 +14,6 @@ function AppContent() {
   return (
     <>
       <Navbar />
-      {isHomePage && <ImageSlider />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/members" element={<Members />} />
