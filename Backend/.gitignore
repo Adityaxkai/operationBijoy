@@ -34,8 +34,6 @@ logs/
 *.sqlite
 *.sqlite3
 
-# Coverage directory
-coverage/
 
 # OS generated files
 .DS_Store
