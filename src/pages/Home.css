@@ -1,29 +1,66 @@
+/* HERO SECTION */
+*{
+  
+}
 .hero-section {
-    background: linear-gradient(to right, #003973, #e5e5be);
-    color: white;
-    text-align: center;
-    padding: 4rem 2rem;
+  background: linear-gradient(to right, #003973, #e5e5be);
+  color: white;
+  text-align: center;
+  padding: 4rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.hero-section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.hero-section p {
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* MEMBERS SECTION */
+.members-section {
+  padding: 3rem 2rem;
+  background-color: #f7f9fb;
+  box-sizing: border-box;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+/* RESPONSIVE STYLING */
+@media (max-width: 768px) {
+  .hero-section {
+    padding: 3rem 1.2rem;
   }
-  
+
   .hero-section h2 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-  }
-  
-  .hero-section p {
-    font-size: 1.2rem;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  
-  .members-section {
-    padding: 3rem 2rem;
-    background-color: #f7f9fb;
-  }
-  
-  .section-title {
-    text-align: center;
     font-size: 2rem;
-    margin-bottom: 2rem;
   }
-  
+
+  .hero-section p {
+    font-size: 1rem;
+    padding: 0 10px;
+  }
+
+  .section-title {
+    font-size: 1.6rem;
+  }
+
+  .members-section {
+    padding: 2rem 1rem;
+  }
+}

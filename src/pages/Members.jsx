@@ -36,66 +36,43 @@ export const Members = () => {
     <div className="members-page">
       <h1>Our Members</h1>
 
-      {/* Add Member Form */}
       <form className="add-member-form" onSubmit={handleAddMember}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Full Name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="id"
-          placeholder="Membership ID"
-          value={formData.id}
-          onChange={handleChange}
-          required
-        />
+        <input type="text" name="name" placeholder="Full Name" value={formData.name} onChange={handleChange} required />
+        <input type="text" name="id" placeholder="Membership ID" value={formData.id} onChange={handleChange} required />
         <select name="payment" value={formData.payment} onChange={handleChange}>
           <option value="Paid">Paid</option>
           <option value="Unpaid">Unpaid</option>
         </select>
-        <input
-          type="text"
-          name="attendance"
-          placeholder="Attendance (e.g. 90%)"
-          value={formData.attendance}
-          onChange={handleChange}
-          required
-        />
+        <input type="text" name="attendance" placeholder="Attendance (e.g. 90%)" value={formData.attendance} onChange={handleChange} required />
         <button type="submit">Add Member</button>
       </form>
 
-      {/* Members Table */}
-      <table className="members-table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Membership ID</th>
-            <th>Payment Status</th>
-            <th>Attendance</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {members.map((member) => (
-            <tr key={member.id}>
-              <td>{member.name}</td>
-              <td>{member.id}</td>
-              <td className={member.payment.toLowerCase()}>{member.payment}</td>
-              <td>{member.attendance}</td>
-              <td>
-                <button className="delete-btn" onClick={() => handleDelete(member.id)}>
-                  Delete
-                </button>
-              </td>
+      <div className="table-container">
+        <table className="members-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Membership ID</th>
+              <th>Payment Status</th>
+              <th>Attendance</th>
+              <th>Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {members.map((member) => (
+              <tr key={member.id}>
+                <td>{member.name}</td>
+                <td>{member.id}</td>
+                <td className={member.payment.toLowerCase()}>{member.payment}</td>
+                <td>{member.attendance}</td>
+                <td>
+                  <button className="delete-btn" onClick={() => handleDelete(member.id)}>Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

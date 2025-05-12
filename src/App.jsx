@@ -6,10 +6,11 @@ import { Coaching } from './pages/Coaching';
 import { Finances } from './pages/Finances';
 import { Attendance } from './pages/Attendance';
 import { Navbar } from './components/Navbar';
-// A wrapper to conditionally show components based on route
+import { Login } from './pages/Login';       // 👈 Import Login page
+import { Signup } from './pages/Signup';     // 👈 Import Signup page
+
 function AppContent() {
   const location = useLocation();
-  const isHomePage = location.pathname === '/';
 
   return (
     <>
@@ -21,6 +22,8 @@ function AppContent() {
         <Route path="/coaching" element={<Coaching />} />
         <Route path="/finances" element={<Finances />} />
         <Route path="/attendance" element={<Attendance />} />
+        <Route path="/login" element={<Login />} />     {/* 👈 Login route */}
+        <Route path="/signup" element={<Signup />} />   {/* 👈 Signup route */}
       </Routes>
     </>
   );
