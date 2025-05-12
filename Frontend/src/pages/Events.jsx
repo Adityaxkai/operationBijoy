@@ -1,0 +1,89 @@
+import React, { useEffect, useState } from "react";
+import { FaCalendarAlt } from "react-icons/fa";
+import "./Events.css";
+
+export const Events = () => {
+  const [events, setEvents] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:8081/users');
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        setEvents(data);
+      } catch (err) {
+        console.error('Fetch error:', err);
+        setError(err.message);
+      }
+    };
+
+    const setupSSE = () => {
+      const eventSource = new EventSource('http://localhost:8081/updates');
+      
+      eventSource.onmessage = (e) => {
+        try {
+          const newData = JSON.parse(e.data);
+          setEvents(prev => [...prev, ...newData]);
+        } catch (err) {
+          console.error('SSE parsing error:', err);
+        }
+      };
+
+      eventSource.onerror = () => {
+        console.error('SSE connection error');
+        eventSource.close();
+      };
+
+      return eventSource;
+    };
+
+    fetchData();
+    const eventSource = setupSSE();
+
+    return () => {
+      eventSource.close();
+    };
+  }, []);
+
+  if (error) {
+    return <div className="error-message">Error loading events: {error}</div>;
+  }
+
+  return (
+    <section className="events-section">
+      <h2 className="events-title">🎉 Upcoming Events</h2>
+      {events.length === 0 ? (
+        <div className="loading-message">Loading events...</div>
+      ) : (
+        <div className="events-grid">
+          {events.map((event, index) => (
+            <div className="event-card" key={index}>
+              <div className="event-image-container">
+                <img 
+                  src={event.image_path || 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e'} 
+                  alt={event.title}
+                  className="event-image"
+                />
+              </div>
+              <div className="event-date-badge">
+                <FaCalendarAlt className="calendar-icon" />
+                {new Date(event.date).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric'
+                })}
+              </div>
+              <div className="event-content">
+                <h3>{event.title}</h3>
+                <p>{event.comment}</p>
+                <button className="register-btn">Register</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+};

@@ -1,0 +1,29 @@
+.hero-section {
+    background: linear-gradient(to right, #003973, #e5e5be);
+    color: white;
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+  
+  .hero-section h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .hero-section p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .members-section {
+    padding: 3rem 2rem;
+    background-color: #f7f9fb;
+  }
+  
+  .section-title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  
