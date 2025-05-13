@@ -1,0 +1,13 @@
+overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  .slider-wrapper
+
+
+
+
+  INSERT INTO operation_bijoy (image_path, date, title, comment, created_at, updated_at) VALUES 
+('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e', '2025-06-15', 'Summer Tournament 2025', 'Join us for our summer tournament with exciting prizes!', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5', '2025-12-10', 'Winter Tournament 2025', 'Join us for our winter tournament with exciting prizes!', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('https://images.unsplash.com/photo-1540747913346-19e32dc3e97e', '2025-09-15', 'Annual Tournament 2025', 'Join us for our annual tournament with exciting prizes!', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);

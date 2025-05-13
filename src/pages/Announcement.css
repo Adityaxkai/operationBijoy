@@ -1,0 +1,87 @@
+.announcement-page {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.announcement-title {
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  color: #2c3e50;
+}
+
+.announcement-form .form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+}
+
+.announcement-form label {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #34495e;
+}
+
+.announcement-form input,
+.announcement-form textarea {
+  padding: 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.announcement-form input:focus,
+.announcement-form textarea:focus {
+  border-color: #2980b9;
+  outline: none;
+}
+
+.submit-btn {
+  background-color: #2980b9;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 30px;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 1rem;
+}
+
+.submit-btn:hover {
+  background-color: #1c6ea4;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .announcement-page {
+    padding: 1.5rem;
+    margin: 1rem;
+  }
+
+  .announcement-title {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .announcement-page {
+    padding: 1rem;
+  }
+
+  .announcement-title {
+    font-size: 1.5rem;
+  }
+
+  .submit-btn {
+    width: 100%;
+    font-size: 0.95rem;
+  }
+}
