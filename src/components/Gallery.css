@@ -1,0 +1,33 @@
+/* src/components/Gallery.css */
+.gallery-wrapper {
+  padding: 60px 20px;
+  background: linear-gradient(to right, #f0faff, #e0f7fa);
+}
+
+.gallery-container {
+  max-width: 105%;
+  margin-top:20%;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  background-color: #ffffff;
+}
+
+.gallery-heading {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* Ensure thumbnails scale well on smaller devices */
+.image-gallery-thumbnail img {
+  border-radius: 8px;
+}
+
+@media (max-width: 600px) {
+  .gallery-heading {
+    font-size: 1.5rem;
+  }
+}

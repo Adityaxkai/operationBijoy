@@ -1,85 +1,166 @@
 .events-section {
-    padding: 60px 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    background: linear-gradient(to right, #f9f9f9, #e0f7fa);
-    border-radius: 20px;
-  }
-  
+  padding: 60px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: linear-gradient(to right, #f9f9f9, #e0f7fa);
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+}
+
+.events-title {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #2c3e50;
+  margin-bottom: 50px;
+  font-weight: bold;
+}
+
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+.event-card {
+  background: linear-gradient(145deg, #ffffff, #f1f1f1);
+  padding: 30px 20px;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%);
+}
+
+.event-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.event-date-badge {
+  background-color: #0077b6;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 8px;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.event-content {
+  padding-top: 50px;
+}
+
+.event-content h3 {
+  font-size: 1.4rem;
+  color: #1e272e;
+  margin-bottom: 10px;
+}
+
+.event-content p {
+  color: #555;
+  margin-bottom: 20px;
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+.register-btn {
+  background-color: #00b4d8;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.register-btn:hover {
+  background-color: #0077b6;
+  transform: translateY(-2px);
+}
+
+/* Registration form styles */
+.registration-form {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 1rem;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.registration-form h4 {
+  font-size: 1.2rem;
+  color: #0077b6;
+  margin-bottom: 0.5rem;
+}
+
+.registration-form input,
+.registration-form textarea {
+  padding: 10px 12px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100%;
+  font-family: inherit;
+}
+
+.registration-form textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.registration-form button[type="submit"] {
+  background-color: #0096c7;
+  color: white;
+  padding: 10px 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.registration-form button[type="submit"]:hover {
+  background-color: #005f8a;
+}
+
+/* Responsive Tweaks */
+@media (max-width: 768px) {
   .events-title {
-    text-align: center;
-    font-size: 2.5rem;
-    color: #2c3e50;
-    margin-bottom: 50px;
-    font-weight: bold;
+    font-size: 2rem;
   }
-  
-  .events-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 30px;
-  }
-  
-  .event-card {
-    background: linear-gradient(145deg, #ffffff, #f1f1f1);
-    padding: 30px 20px;
-    border-radius: 20px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
-  }
-  
-  .event-card:hover {
-    transform: scale(1.03);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-  }
-  
-  .event-date-badge {
-    background-color: #0077b6;
-    color: white;
-    font-size: 0.9rem;
-    font-weight: 600;
-    padding: 8px 12px;
-    border-radius: 8px;
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  }
-  
-  .event-content {
-    padding-top: 50px;
-  }
-  
+
   .event-content h3 {
-    font-size: 1.3rem;
-    color: #1e272e;
-    margin-bottom: 10px;
+    font-size: 1.2rem;
   }
-  
+
   .event-content p {
-    color: #555;
-    margin-bottom: 20px;
-    line-height: 1.5;
+    font-size: 0.95rem;
   }
-  
+}
+
+@media (max-width: 480px) {
+  .event-card {
+    padding: 20px 15px;
+  }
+
   .register-btn {
-    background-color: #00b4d8;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-weight: 600;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+    width: 100%;
+    padding: 10px;
   }
-  
-  .register-btn:hover {
-    background-color: #0077b6;
+
+  .registration-form {
+    padding: 0.8rem;
   }
-  
+}
