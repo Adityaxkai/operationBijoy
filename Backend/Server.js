@@ -1,11 +1,12 @@
 const express = require('express');
-const mysql = require('mysql2'); // Using mysql2 for better performance
+const mysql = require('mysql2'); // Using mysql2 for better performance connector
 const cors = require('cors');
 
 const app = express();
 const dbPort = 3309; // MySQL port
 const serverPort = 8081; // Server port
 
+// Create connection to the database
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -14,7 +15,7 @@ const db = mysql.createConnection({
     port: dbPort
 });
 
-// Connect to database
+// Connect to database checking 
 db.connect(err => {
     if (err) {
         console.error('Database connection failed:', err.stack);
@@ -26,10 +27,12 @@ db.connect(err => {
 app.use(cors());
 app.use(express.json()); // Add JSON parsing middleware
 
+// default api
 app.get('/', (req, res) => {
     return res.json({ message: 'From backend side' });
 });
 
+// api users to get the data from the database that is mysql
 app.get("/users", (req, res) => {
     const sql = "SELECT * FROM operation_bijoy";
     db.query(sql, (err, data) => {
