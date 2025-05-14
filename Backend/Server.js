@@ -72,6 +72,48 @@ app.get('/updates', (req, res) => {
     });
 });
 
+app.post('/signup',(req,res)=>{
+    const sql= "INSERT INTO signup(name,email,password) VALUES(?)";
+    const values = [
+        req.body.name,
+        req.body.email,
+        req.body.password
+    ];
+    db.query(sql,[values],(err,data)=>{
+        if(err) return res.status(500).json(err);
+        return res.json(data);
+    });
+})
+
+app.post('/contactus',(req,res)=>{
+    const sql= "INSERT INTO contactus(name,email,message) VALUES(?)";
+    const values = [
+        req.body.name,
+        req.body.email,
+        req.body.message
+    ];
+    db.query(sql,[values],(err,data)=>{
+        if(err) return res.status(500).json(err);
+        return res.json(data);
+    });
+})
+
+app.post('/login',(req,res)=>{
+    const sql= "SELECT * FROM signup WHERE email = ? AND password = ?";
+    const values = [
+        req.body.email,
+        req.body.password
+    ];
+    db.query(sql,values,(err,data)=>{
+        if(err) return res.status(500).json(err);
+        if(data.length > 0){
+            return res.json({message:"Login successful"});
+        }else{
+            return res.status(401).json({message:"Invalid credentials"});
+        }
+    });
+})
+
 app.listen(serverPort, () => {
     console.log(`Server is running on port ${serverPort}`);
 });

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaCalendarAlt } from "react-icons/fa";
 import "./Events.css";
 
 export const Events = () => {
   const [events, setEvents] = useState([]);
   const [error, setError] = useState(null);
-
+  const navigate=useNavigate();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -78,7 +79,7 @@ export const Events = () => {
               <div className="event-content">
                 <h3>{event.title}</h3>
                 <p>{event.comment}</p>
-                <button className="register-btn">Register</button>
+                <button className="register-btn" onClick={()=>navigate('/register')}>Register</button>
               </div>
             </div>
           ))}
