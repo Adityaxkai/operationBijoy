@@ -48,7 +48,7 @@ const [message,setMessage]=useState("");
             setFormData({ name: '', email: '', message: '' });
         } else {
           // Handle server validation errors
-          setErrors({ submit: data.message || 'Signup failed' });
+          setErrors({ submit: data.message || 'Please Try After Sometime' });
         }
       } catch (error) {
         setErrors({ submit: 'Network error. Please try again.'+error });
@@ -72,18 +72,19 @@ const [message,setMessage]=useState("");
         </div>
 
         {/* Contact Form */}
-        {message && <div className="alert alert-success">{message}</div>}
+        {message && <div className="alert alert-success fs-4 fw-4">{message}</div>}
         <form className="contact-form" onSubmit={handleSubmit}>
-          <input
+        <input
             type="text"
             name="name"
             placeholder="Your Name"
             required
             value={formData.name}
             onChange={handleChange}
-            className='form-control fs-4'
+            className={`form-control fs-4 ${errors.name ? "is-invalid" : ""}`}
           />
-          {errors.name && <div className="invalid-feedback">{errors.name}</div>}
+          {errors.name && <div className="invalid-feedback fs-4 fw-4">{errors.name}</div>}
+
           <input
             type="email"
             name="email"
@@ -91,9 +92,10 @@ const [message,setMessage]=useState("");
             required
             value={formData.email}
             onChange={handleChange}
-            className='form-control fs-4'
+            className={`form-control fs-4 ${errors.email ? "is-invalid" : ""}`}
           />
-          {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+          {errors.email && <div className="invalid-feedback fs-4 fw-4">{errors.email}</div>}
+
           <textarea
             name="message"
             rows="5"
@@ -101,9 +103,9 @@ const [message,setMessage]=useState("");
             required
             value={formData.message}
             onChange={handleChange}
-            className='form-control fs-4'
+            className={`form-control fs-4 ${errors.message ? "is-invalid" : ""}`}
           ></textarea>
-          {errors.message && <div className="invalid-feedback">{errors.message}</div>}
+          {errors.message && <div className="invalid-feedback fs-4 fw-4">{errors.message}</div>}
            <button type="submit" className="cta-button"  disabled={isLoading}>{isLoading ? ' Sending...' : 'Contact Us'}</button>
         </form>
       </div>

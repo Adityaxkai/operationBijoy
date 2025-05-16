@@ -8,7 +8,7 @@ export default function AuthChecker({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Check if logged in (like looking for a cookie!)
+    
     const checkLogin = () => {
       const loggedIn = localStorage.getItem('isLoggedIn');
       setIsLoggedIn(loggedIn === 'true');
@@ -16,7 +16,7 @@ export default function AuthChecker({ children }) {
     };
 
     checkLogin();
-  }, []);
+  }, [location]);
 
   // Protected pages (need login)
   const protectedPages = [
