@@ -21,7 +21,7 @@ const Validate = (values) => {
     if (!message) {
       errors.message = "Message is required";
     } else if (message.length < 10) {
-      errors.password = "Message should be meaning full";
+      errors.message = "Message should be meaningful (at least 10 characters)";
     }
   
     return errors;

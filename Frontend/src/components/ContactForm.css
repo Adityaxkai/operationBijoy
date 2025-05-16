@@ -42,7 +42,6 @@
     padding: 12px 15px;
     border: 1px solid #ccc;
     border-radius: 8px;
-    font-size: 1rem;
     font-family: inherit;
     width: 100%;
     resize: vertical;
@@ -53,7 +52,6 @@
     color: white;
     border: none;
     padding: 12px 20px;
-    font-size: 1rem;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -61,6 +59,18 @@
   
   .contact-form button:hover {
     background-color: #023e8a;
+  }
+  .is-invalid {
+    border-color: #dc3545 !important;
+  }
+  
+  .invalid-feedback {
+    color: #dc3545;
+    font-size: 1.5rem;
+    margin-top: 0.25rem;
+    text-align: left;
+    width: 100%;
+    display: block;
   }
   
   /* Responsive layout */
