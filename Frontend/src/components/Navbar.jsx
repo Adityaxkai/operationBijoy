@@ -10,7 +10,6 @@ export const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
-  // Check login status on component mount
   useEffect(() => {
     const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
     setIsLoggedIn(loggedIn);
@@ -26,6 +25,19 @@ export const Navbar = () => {
     setMenuOpen(false);
   };
 
+  const navLinks = [
+    { path: '/', label: 'Home' },
+    { path: '/members', label: 'Members' },
+    { path: '/events', label: 'Events' },
+    { path: '/coaching', label: 'Coaching' },
+    { path: '/finances', label: 'Finances' },
+    { path: '/attendance', label: 'Attendance' },
+  ];
+
+  if (isLoggedIn) {
+    navLinks.push({ path: '/admin', label: 'Admin' });
+  }
+
   return (
     <header className="navbar-header fs-2" style={{
       background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
@@ -34,8 +46,7 @@ export const Navbar = () => {
     }}>
       <div className="container">
         <div className="d-flex justify-content-between align-items-center py-3 fs-2 fw-bolder text-black">
-          {/* Logo Section - Enhanced */}
-          <div className="d-flex align-items-center ">
+          <div className="d-flex align-items-center">
             <div className="me-3">
               <img 
                 src="/src/assets/Picture2.png" 
@@ -57,30 +68,26 @@ export const Navbar = () => {
               Bijoy Institute
             </h1>
           </div>
-    
+
           <nav className="d-none d-md-flex align-items-center">
-            <ul className="nav mb-0 ">
-              {['/', '/members', '/events', '/coaching', '/finances', '/attendance'].map((path) => (
+            <ul className="nav mb-0">
+              {navLinks.map(({ path, label }) => (
                 <li className="nav-item mx-2" key={path}>
                   <NavLink 
                     to={path} 
-                    className="nav-link fw-medium px-3 py-2 rounded  fs-3 fw-bold text-#f2f2"
+                    className="nav-link fw-medium px-3 py-2 rounded fs-3 fw-bold text-#f2f2"
                     style={{
                       fontSize: '1.1rem',
                       transition: 'all 0.3s ease'
                     }}
-                    activeStyle={{
-                      backgroundColor: 'rgba(13, 110, 253, 0.1)',
-                      color: '#0d6efd'
-                    }}
                   >
-                    {path === '/' ? 'Home' : path.slice(1).charAt(0).toUpperCase() + path.slice(2)}
+                    {label}
                   </NavLink>
                 </li>
               ))}
             </ul>
-    
-            <div className="ms-4 ">
+
+            <div className="ms-4">
               {isLoggedIn ? (
                 <Dropdown>
                   <Dropdown.Toggle 
@@ -117,7 +124,7 @@ export const Navbar = () => {
                 <Button 
                   variant="primary"
                   onClick={() => navigate('/login')}
-                  className="ms-3 px-4 py-2  fs-3 fw-bold text-#f2f2"
+                  className="ms-3 px-4 py-2 fs-3 fw-bold text-#f2f2"
                   style={{
                     fontSize: '1.1rem',
                     borderRadius: '8px',
@@ -130,12 +137,11 @@ export const Navbar = () => {
               )}
             </div>
           </nav>
-    
-          {/* Mobile Menu Button - Enhanced */}
+
           <div className="d-md-none">
             <button 
               onClick={toggleMenu} 
-              className="btn btn-outline-secondary p-2 "
+              className="btn btn-outline-secondary p-2"
               style={{
                 fontSize: '1.1rem',
                 borderRadius: '8px',
@@ -155,24 +161,20 @@ export const Navbar = () => {
             animation: 'fadeIn 0.3s ease-out'
           }}>
             <ul className="nav flex-column gap-2">
-              {['/', '/members', '/events', '/coaching', '/finances', '/attendance'].map((path) => (
+              {navLinks.map(({ path, label }) => (
                 <li className="nav-item" key={path}>
                   <NavLink 
                     to={path} 
                     className="nav-link px-3 py-2 rounded fw-medium"
                     style={{ fontSize: '1.1rem' }}
                     onClick={() => setMenuOpen(false)}
-                    activeStyle={{
-                      backgroundColor: 'rgba(13, 110, 253, 0.1)',
-                      color: '#0d6efd'
-                    }}
                   >
-                    {path === '/' ? 'Home' : path.slice(1).charAt(0).toUpperCase() + path.slice(2)}
+                    {label}
                   </NavLink>
                 </li>
               ))}
             </ul>
-    
+
             <div className="d-grid gap-3 mt-4">
               {isLoggedIn ? (
                 <>
@@ -216,8 +218,7 @@ export const Navbar = () => {
           </div>
         )}
       </div>
-    
-      {/* Add this to your CSS file */}
+
       <style jsx>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(-10px); }
