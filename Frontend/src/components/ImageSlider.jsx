@@ -44,7 +44,7 @@ export const ImageSlider = () => {
         {slides.map((img, idx) => (
           <SwiperSlide key={idx}>
             <div className="slider-slide">
-              <img src={img.src} alt={img.alt}  className="slider-image"/>
+              <img src={img.src} alt={img.alt}  className="slider-image py-2"/>
               <div className="overlay">
                 <div className="content-wrapper">
                   <img className="logo" src="/src/assets/Picture2.png" alt="Bijoy Institute Logo" />

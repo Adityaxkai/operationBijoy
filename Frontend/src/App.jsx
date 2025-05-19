@@ -10,7 +10,9 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Signup from './pages/Signup';
 import AuthChecker from './Wrapper/AuthChecker';
-
+import Profile from './components/Profile';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 // A wrapper to conditionally show components based on route
 function AppContent() {
   const location = useLocation();
@@ -29,6 +31,8 @@ function AppContent() {
           <Route path="/finances" element={<Finances />} />
           <Route path="/attendance" element={<Attendance />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="*" element={<div>404 Not Found</div>} />
         </Routes>
     </>
   );

@@ -91,6 +91,7 @@ export const Navbar = () => {
                       padding: '0.5rem 1.25rem',
                       borderRadius: '8px'
                     }}
+                    className="fs-4 fw-bold"
                   >
                     <i className="bi bi-person-circle me-2"></i>
                     Account
@@ -98,16 +99,14 @@ export const Navbar = () => {
                   <Dropdown.Menu className="shadow-sm border-0">
                     <Dropdown.Item 
                       onClick={() => navigate('/profile')}
-                      className="py-2"
-                      style={{ fontSize: '1rem' }}
+                      className="py-2 fs-4 fw-bold"
                     >
                       <i className="bi bi-person me-2"></i>
                       Profile
                     </Dropdown.Item>
                     <Dropdown.Item 
                       onClick={handleLogout}
-                      className="py-2 text-danger"
-                      style={{ fontSize: '1rem' }}
+                      className="py-2 text-danger fs-4 fw-bold"
                     >
                       <i className="bi bi-box-arrow-right me-2"></i>
                       Logout

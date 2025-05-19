@@ -47,6 +47,7 @@ const Login = () => {
         const data = await response.json();
         
         if (response.ok) {
+          // Assuming the response contains a token
           localStorage.setItem('authToken', data.token);
           localStorage.setItem('isLoggedIn', 'true');
           navigate('/');
