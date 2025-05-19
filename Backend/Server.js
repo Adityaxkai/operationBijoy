@@ -112,10 +112,7 @@ app.post('/contactus',(req,res)=>{
 
 app.post('/login',(req,res)=>{
     const sql= "SELECT Id,name,email,password FROM signup WHERE email = ?";
-    const values = [
-        req.body.email,
-    ];
-    db.query(sql,values,async (err,data)=>{
+    db.query(sql,[req.body.email],async (err,data)=>{
         if(err) return res.status(500).json(err);
         if(data.length > 0){
             const user=data[0];
