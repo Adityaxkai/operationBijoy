@@ -1,0 +1,27 @@
+/* Add this to your Profile.css file */
+.avatar-circle {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.card {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.form-control[readonly] {
+  background-color: #f8f9fa;
+  border: 1px solid #ced4da;
+  cursor: not-allowed;
+}
+
+/* Loading spinner center */
+.spinner-container {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

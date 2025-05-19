@@ -106,7 +106,13 @@ const [message,setMessage]=useState("");
             className={`form-control fs-4 ${errors.message ? "is-invalid" : ""}`}
           ></textarea>
           {errors.message && <div className="invalid-feedback fs-4 fw-4">{errors.message}</div>}
-           <button type="submit" className="cta-button"  disabled={isLoading}>{isLoading ? ' Sending...' : 'Contact Us'}</button>
+          <button 
+            type="submit" 
+            className="cta-button hover-soft"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Sending...' : 'Send Message'}
+          </button>
         </form>
       </div>
     </section>

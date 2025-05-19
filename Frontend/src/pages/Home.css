@@ -1,29 +1,166 @@
-.hero-section {
-    background: linear-gradient(to right, #003973, #e5e5be);
-    color: white;
-    text-align: center;
-    padding: 4rem 2rem;
-  }
-  
-  .hero-section h2 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-  }
-  
-  .hero-section p {
-    font-size: 1.2rem;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  
-  .members-section {
-    padding: 3rem 2rem;
-    background-color: #f7f9fb;
-  }
-  
-  .section-title {
-    text-align: center;
-    font-size: 2rem;
-    margin-bottom: 2rem;
-  }
-  
+:root {
+  --glass-bg: rgba(245, 245, 245, 0.18); /* Soft white glass */
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --text-primary: #f0f0f0; /* Soft white */
+  --text-secondary: #e0e0e0; /* Lighter gray */
+  --accent-color: #4a89dc; /* Pleasant blue */
+  --accent-hover: #3b7dd8;
+  --shadow-color: rgba(30, 45, 70, 0.25); /* Deep blue shadow */
+}
+
+footer {
+  background: linear-gradient(135deg, #2a3a4a 0%, #1e2b3a 100%);
+  color: #e0e0e0;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+footer a {
+  color: #b0c4de;
+  transition: all 0.3s ease;
+}
+
+footer a:hover {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.contact-section {
+  background: #f8f9fa;
+  padding: 60px 20px;
+  border-top: 1px solid rgba(0,0,0,0.05);
+}
+
+.contact-container {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.contact-title {
+  color: var(--soft-dark);
+  font-weight: 600;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+.contact-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(to right, #4a6fa5, #86a8e7);
+}
+
+.contact-info {
+  background-color: #f8f9fa;
+  border: 1px solid rgba(0,0,0,0.03);
+  box-shadow: none;
+}
+
+/* Form Inputs - Softer Styling */
+.contact-form input,
+.contact-form textarea {
+  background-color: #f8f9fa;
+  border: 1px solid rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: var(--soft-blue);
+  box-shadow: 0 0 0 0.2rem rgba(74, 111, 165, 0.15);
+}
+
+.contact-form button {
+  background: linear-gradient(to right, #4a6fa5, #86a8e7);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.contact-form button:hover {
+  background: linear-gradient(to right, #3a5a95, #7698d7);
+  transform: translateY(-2px);
+}
+
+/* Heart Animation - Softer Version */
+.heart-beat {
+  animation: heartbeat 1.8s infinite;
+  color: #ff6b6b;
+}
+
+@keyframes heartbeat {
+  0% { transform: scale(1); opacity: 0.8; }
+  25% { transform: scale(1.1); opacity: 1; }
+  50% { transform: scale(1); opacity: 0.8; }
+  75% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
+/* Hover Effects - Subtle */
+.hover-soft {
+  transition: all 0.3s ease;
+}
+
+.hover-soft:hover {
+  transform: translateY(-3px);
+}
+
+/* Text Colors - Softer */
+.text-soft {
+  color: var(--soft-text);
+}
+
+/* New Pleasant Color Palette */
+:root {
+  --glass-bg: rgba(245, 245, 245, 0.18); /* Soft white glass */
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --text-primary: #f0f0f0; /* Soft white */
+  --text-secondary: #e0e0e0; /* Lighter gray */
+  --accent-color: #4a89dc; /* Pleasant blue */
+  --accent-hover: #3b7dd8;
+  --shadow-color: rgba(30, 45, 70, 0.25); /* Deep blue shadow */
+}
+
+/* Updated Overlay */
+.overlay {
+  background: linear-gradient(
+    135deg, 
+    rgba(40, 60, 90, 0.4) 0%, 
+    rgba(25, 40, 65, 0.5) 100%
+  );
+}
+
+/* Updated Content Wrapper */
+.content-wrapper {
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px var(--shadow-color);
+}
+
+/* Text Colors */
+.overlay h1 {
+  color: var(--text-primary);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.overlay p {
+  color: var(--text-secondary);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Button Styling */
+.cta-button {
+  background: var(--accent-color);
+  box-shadow: 0 4px 15px rgba(74, 137, 220, 0.4);
+}
+
+.cta-button:hover {
+  background: var(--accent-hover);
+  box-shadow: 0 6px 20px rgba(74, 137, 220, 0.5);
+}
