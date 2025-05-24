@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Profile.css';
 import "bootstrap-icons/font/bootstrap-icons.css";
-
+import  apiFetch  from './api';
+import { Button } from 'react-bootstrap';
 const Profile = () => {
   const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -21,35 +22,13 @@ const Profile = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem('authToken');
-        if (!token) {
-          navigate('/login');
-          return;
-        }
-        
-        const response = await fetch('http://localhost:8081/profile', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (response.status === 401) {
-          localStorage.removeItem('authToken');
-          navigate('/login');
-          return;
-        }
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch profile data');
-        }
-
-        const data = await response.json();
+        setIsLoading(true);
+        const data = await apiFetch('/profile');
         setUserData({
           name: data.name,
-          email: data.email
-        });
+          email: data.email,
+          is_admin: data.is_admin || false // Add this line
+      });
         setFormData({
           name: data.name,
           email: data.email
@@ -57,10 +36,6 @@ const Profile = () => {
       } catch (error) {
         console.error('Profile fetch error:', error);
         setError(error.message);
-        if (error.message.includes('403') || error.message.includes('401')) {
-          localStorage.removeItem('authToken');
-          navigate('/login');
-        }
       } finally {
         setIsLoading(false);
       }
@@ -72,20 +47,11 @@ const Profile = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('authToken');
-      const response = await fetch('http://localhost:8081/profile', {
+      await apiFetch('/profile', {
         method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify(formData)
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to update profile');
-      }
-
+      
       setUserData({ ...formData });
       setIsEditing(false);
     } catch (error) {
@@ -102,22 +68,13 @@ const Profile = () => {
     }
 
     try {
-      const token = localStorage.getItem('authToken');
-      const response = await fetch('http://localhost:8081/change-password', {
+      await apiFetch('/change-password', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
         body: JSON.stringify({
           currentPassword: passwordData.currentPassword,
           newPassword: passwordData.newPassword
         })
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to change password');
-      }
 
       setIsChangingPassword(false);
       setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
@@ -127,6 +84,7 @@ const Profile = () => {
       setError(error.message);
     }
   };
+
 
   if (isLoading) {
     return (
@@ -291,6 +249,20 @@ const Profile = () => {
                   </div>
                   
                   <div className="d-grid gap-3">
+                  
+                  {userData.is_admin && (
+                    <Button 
+                      variant="outline-success" 
+                      className="fs-4 fw-bold"
+                      onClick={() => navigate('/admin')}
+                    >
+                      <i className="bi bi-speedometer2"></i>
+                      {' '}
+                      Admin Panel
+                    </Button>
+                  )}
+
+
                     <button 
                       className="btn btn-outline-primary fs-4 fw-bold"
                       onClick={() => setIsEditing(true)}

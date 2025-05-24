@@ -13,6 +13,7 @@ import AuthChecker from './Wrapper/AuthChecker';
 import Profile from './components/Profile';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
+import AdminPanel from './components/AdminPanel';
 // A wrapper to conditionally show components based on route
 function AppContent() {
   const location = useLocation();
@@ -32,6 +33,7 @@ function AppContent() {
           <Route path="/attendance" element={<Attendance />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/admin" element={<AdminPanel />} />
           <Route path="*" element={<div>404 Not Found</div>} />
         </Routes>
     </>
