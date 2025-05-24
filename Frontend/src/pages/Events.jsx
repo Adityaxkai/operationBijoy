@@ -56,17 +56,23 @@ export const Events = () => {
     <section className="events-section">
       <h2 className="events-title">🎉 Upcoming Events</h2>
       {events.length === 0 ? (
-        <div className="loading-message">Loading events...</div>
+        <div className="loading-message fs-1 fw-bolder">Loading events...</div>
       ) : (
         <div className="events-grid">
           {events.map((event, index) => (
             <div className="event-card" key={index}>
               <div className="event-image-container">
                 <img 
-                  src={event.image_path || 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e'} 
-                  alt={event.title}
-                  className="event-image"
-                />
+                    src={event.image_path.startsWith('http') 
+                        ? event.image_path 
+                        : `http://localhost:8081${event.image_path}`} 
+                        alt={event.title}
+                    onError={(e) => {
+                        e.target.onerror = null; 
+                        e.target.src = '/placeholder-image.jpg'
+                    }}
+                    className="event-image"
+                  />
               </div>
               <div className="event-date-badge">
                 <FaCalendarAlt className="calendar-icon" />

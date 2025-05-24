@@ -3,7 +3,9 @@ const mysql = require('mysql2'); // Using mysql2 for better performance connecto
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-
+const multer= require('multer');
+const path= require('path');
+const fs = require('fs');
 saltRound=12
 require('dotenv').config(); // This line reads the .env file
 
@@ -110,44 +112,73 @@ app.post('/contactus',(req,res)=>{
     });
 })
 
-app.post('/login',(req,res)=>{
-    const sql= "SELECT Id,name,email,password FROM signup WHERE email = ?";
-    db.query(sql,[req.body.email],async (err,data)=>{
-        if(err) return res.status(500).json(err);
-        if(data.length > 0){
-            const user=data[0];
-            console.log("All columns from DB:", Object.keys(user));
-            console.log("User object from DB:", user);
+app.post('/login', async (req, res) => {
+    try {
+        const sql = "SELECT Id, name, email, password, is_admin FROM signup WHERE email = ?";
+        db.query(sql, [req.body.email.trim()], async (err, data) => {
+            if (err) {
+                console.error("Database error:", err);
+                return res.status(500).json(err);
+            }
 
-            console.log("Input password:", req.body.password);
+            if (data.length === 0) {
+                return res.status(401).json({message: "Invalid credentials"});
+            }
+
+            const user = data[0];
+            
+            // Normalize the password input
+            const inputPassword = req.body.password.trim();
+            
+            // Debug logs
+            console.log("Input password:", inputPassword);
             console.log("Stored hash:", user.password);
 
-            const isPasswordValid=await bcrypt.compare(req.body.password.trim(),user.password);
-            console.log("Password comparison result:", isPasswordValid);
-            if(!user.Id) {
-                return res.status(500).json({message: "User ID not found"});
+            // First check if the password is already hashed (might be plaintext in DB)
+            if (user.password.length < 60) { // BCrypt hashes are always 60 chars
+                // If password is stored plaintext (shouldn't happen), hash it now
+                const hashedPassword = await bcrypt.hash(inputPassword, saltRound);
+                if (inputPassword === user.password) {
+                    // Update the DB with hashed password
+                    const updateSql = "UPDATE signup SET password = ? WHERE Id = ?";
+                    db.query(updateSql, [hashedPassword, user.Id], (updateErr) => {
+                        if (updateErr) console.error("Failed to update password hash:", updateErr);
+                    });
+                } else {
+                    return res.status(401).json({message: "Invalid credentials"});
+                }
+            } else {
+                // Normal bcrypt comparison
+                const isPasswordValid = await bcrypt.compare(inputPassword, user.password);
+                if (!isPasswordValid) {
+                    return res.status(401).json({message: "Invalid credentials"});
+                }
             }
-            if(isPasswordValid){
-                const token=jwt.sign(
-                    {id:user.Id},
-                    process.env.ACCESS_TOKEN_SECRET,
-                    {expiresIn:'1h'}//Token will expire in 1 hour
-                );
-                return res.json({
-                    message:"Login successful",
-                    token:token,
-                    user:{
-                        id:user.Id,
-                        name:user.name,
-                        email:user.email
-                    }
-                });
-            }
-        }else{
-            return res.status(401).json({message:"Invalid credentials"});
-        }
-    });
-})
+
+            const token = jwt.sign(
+                {id: user.Id},
+                process.env.ACCESS_TOKEN_SECRET,
+                {expiresIn: '1h'}
+            );
+            return res.json({
+                message: "Login successful",
+                token: token,
+                user: {
+                  id: user.Id,
+                  name: user.name,
+                  email: user.email,
+                  is_admin: user.is_admin
+                }
+            });
+        });
+    } catch (error) {
+        console.error("Login process error:", error);
+        return res.status(500).json({
+            message: "Login process failed",
+            error: error.message
+        });
+    }
+});
 // Middleware to verify JWT token
 const verifyToken = (req, res, next) => {
     const token = req.headers['authorization']?.split(' ')[1];
@@ -169,7 +200,7 @@ const verifyToken = (req, res, next) => {
 
 app.get('/profile',verifyToken, (req, res) => {
     console.log("User ID from token:", req.user.id);
-    const sql = "SELECT name,email FROM signup WHERE Id = ?";
+    const sql = "SELECT name, email, is_admin FROM signup WHERE Id = ?"; 
     db.query(sql, [req.user.id], (err, data) => {
         if (err) {
             console.error("Database error:", err); 
@@ -224,6 +255,174 @@ app.put('/profile', verifyToken, async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   });
+// Get all contact messages (admin only)
+app.get('/admin/contacts', verifyToken, (req, res) => {
+    // Check if user is admin
+    const checkAdminSql = "SELECT is_admin FROM signup WHERE Id = ?";
+    db.query(checkAdminSql, [req.user.id], (err, adminData) => {
+        if (err) {
+            console.error("Admin check error:", err);
+            return res.status(500).json({
+                message: "Database error during admin check",
+                error: err.message
+            });
+        }
+        
+        if (!adminData[0]?.is_admin) {
+            return res.status(403).json({message: "Admin access required"});
+        }
+        
+        // Fix the contacts query
+        const sql = "SELECT id, name, email, message FROM contactus ORDER BY id DESC";
+        db.query(sql, (err, contactsData) => {
+            if (err) {
+                console.error("Contacts query error:", err);
+                return res.status(500).json({
+                    message: "Database error fetching contacts",
+                    error: err.message
+                });
+            }
+            return res.json(contactsData);
+        });
+    });
+});
+  
+  // Delete contact message
+  app.delete('/admin/contacts/:id', verifyToken, (req, res) => {
+    const checkAdminSql = "SELECT is_admin FROM signup WHERE Id = ?";
+    db.query(checkAdminSql, [req.user.id], (err, data) => {
+      if (err) return res.status(500).json(err);
+      if (!data[0]?.is_admin) return res.status(403).json({message: "Admin access required"});
+      
+      const sql = "DELETE FROM contactus WHERE id = ?";
+      db.query(sql, [req.params.id], (err, result) => {
+        if (err) return res.status(500).json(err);
+        return res.json({message: "Message deleted"});
+      });
+    });
+  });
+  
+  // Events endpoints
+  app.get('/admin/events', verifyToken, (req, res) => {
+    const checkAdminSql = "SELECT is_admin FROM signup WHERE Id = ?";
+    db.query(checkAdminSql, [req.user.id], (err, data) => {
+        if (err) {
+            console.error("Admin check error:", err);
+            return res.status(500).json({message: "Database error", error: err});
+        }
+        
+        if (!data[0]?.is_admin) {
+            return res.status(403).json({message: "Admin access required"});
+        }
+        
+        const sql = "SELECT * FROM operation_bijoy ORDER BY date DESC";
+        db.query(sql, (err, data) => {
+            if (err) {
+                console.error("Events query error:", err);
+                return res.status(500).json({message: "Database error", error: err});
+            }
+            return res.json(data);
+        });
+    });
+});
+  
+// File upload setup
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`);
+    }
+});
+
+const upload=multer({
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // Limit file size to 5MB
+    fileFilter: (req, file, cb) => {
+        const filetypes = /jpeg|jpg|png|gif/;
+        const mimetype = filetypes.test(file.mimetype);
+        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+        // Check if the file is an image
+        if (mimetype && extname) {
+          return cb(null, true);
+        }
+        cb(new Error('Only image files are allowed!'));
+    }
+});
+// Serve static files
+app.use('/public', express.static('public'));
+
+
+
+app.post('/admin/events', upload.single('image'), verifyToken, (req, res) => {
+    const checkAdminSql = "SELECT is_admin FROM signup WHERE Id = ?";
+    db.query(checkAdminSql, [req.user.id], (err, data) => {
+        if (err) return res.status(500).json(err);
+        if (!data[0]?.is_admin) return res.status(403).json({message: "Admin access required"});
+        
+        const { title, comment, date } = req.body;
+        const imagePath = req.file ? `/public/uploads/${req.file.filename}` : null;
+        
+        const sql = `INSERT INTO operation_bijoy 
+                    (image_path, title, comment, date) VALUES (?, ?, ?, ?)`;
+        
+        db.query(sql, [imagePath, title, comment, date], (err, result) => {
+            if (err) return res.status(500).json(err);
+            
+            // Get the complete inserted record
+            const getSql = "SELECT * FROM operation_bijoy WHERE id = ?";
+            db.query(getSql, [result.insertId], (err, newEvent) => {
+                if (err) return res.status(500).json(err);
+                return res.json(newEvent[0]); // Return the complete event
+            });
+        });
+    });
+});
+  
+  //add cleanup function to delete the image from the server
+  app.delete('/admin/events/:id', verifyToken, (req, res) => {
+    const checkAdminSql = "SELECT is_admin FROM signup WHERE Id = ?";
+    db.query(checkAdminSql, [req.user.id], (err, data) => {
+        if (err) return res.status(500).json(err);
+        if (!data[0]?.is_admin) return res.status(403).json({message: "Admin access required"});
+        
+        // First, get the image path from the database
+        const getSql = "SELECT image_path FROM operation_bijoy WHERE id = ?";
+        db.query(getSql, [req.params.id], (err, result) => {
+            if (err) return res.status(500).json(err);
+            
+            // Delete the file if exists
+            if (result[0]?.image_path) {
+                // Correct the file path construction
+                const filePath = path.join(__dirname, 'public', result[0].image_path.replace('/public/', ''));
+                fs.unlink(filePath, (err) => {
+                    if (err) console.error('Error deleting file:', err);
+                    // Continue even if file deletion fails
+                });
+            }
+
+            // Now delete the record from the database
+            const deleteSql = "DELETE FROM operation_bijoy WHERE id = ?";
+            db.query(deleteSql, [req.params.id], (err, deleteResult) => {
+                if (err) return res.status(500).json(err);
+                return res.json({message: "Event deleted"});
+            });
+        });
+    });
+});
 app.listen(serverPort, () => {
     console.log(`Server is running on port ${serverPort}`);
+});
+
+
+
+
+// Upload endpoint
+app.post('/upload', upload.single('image'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+    }
+    const filePath = `uploads/${req.file.filename}`;
+    return res.json({ message: 'File uploaded successfully', filePath });
 });

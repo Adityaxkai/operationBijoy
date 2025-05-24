@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Login.css";
+import * as jwt_decode from 'jwt-decode';
 import validate from "./LoginValidation";
 
 const Login = () => {
@@ -12,14 +13,32 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      try {
+        const decoded = jwt_decode(token); // Use jwt_decode correctly
+        if (decoded && decoded.exp * 1000 < Date.now()) {
+          // Token expired, log out
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('isLoggedIn');
+        }
+      } catch (e) {
+        console.error("Token decode error:", e);
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('isLoggedIn');
+      }
+    }
+  }, []);
+
   const handleInput = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value // Store direct value instead of array
+      [name]: value
     }));
     
-    // Clear error when user types
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: "" }));
     }
@@ -47,9 +66,9 @@ const Login = () => {
         const data = await response.json();
         
         if (response.ok) {
-          // Assuming the response contains a token
           localStorage.setItem('authToken', data.token);
           localStorage.setItem('isLoggedIn', 'true');
+          localStorage.setItem('user', JSON.stringify(data.user)); 
           navigate('/');
         } else {
           setErrors({ submit: data.message || 'Login failed. Please check credentials.' });
