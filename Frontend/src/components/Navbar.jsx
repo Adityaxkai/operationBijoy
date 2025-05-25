@@ -2,6 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { Button, Dropdown } from "react-bootstrap";
+import logo from '../assets/Picture2.png'; // ✅ Use proper image import
 import './Navbar.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -39,195 +40,107 @@ export const Navbar = () => {
   }
 
   return (
-    <header className="navbar-header fs-2" style={{
-      background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-      borderBottom: '1px solid rgba(0,0,0,0.08)'
-    }}>
-      <div className="container">
-        <div className="d-flex justify-content-between align-items-center py-3 fs-2 fw-bolder text-black">
-          <div className="d-flex align-items-center">
-            <div className="me-3">
-              <img 
-                src="/src/assets/Picture2.png" 
-                alt="logo" 
-                style={{ 
-                  height: '65px',
-                  transition: 'transform 0.3s ease',
-                  cursor: 'pointer'
-                }}
-                onClick={() => navigate('/')}
-                onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.05)'}
-                onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-              />
-            </div>
-            <h1 className="mb-0 fs-3 fw-bold" style={{
-              color: '#2c3e50',
-              textShadow: '1px 1px 2px rgba(0,0,0,0.1)'
-            }}>
-              Bijoy Institute
-            </h1>
-          </div>
-
-          <nav className="d-none d-md-flex align-items-center">
-            <ul className="nav mb-0">
-              {navLinks.map(({ path, label }) => (
-                <li className="nav-item mx-2" key={path}>
-                  <NavLink 
-                    to={path} 
-                    className="nav-link fw-medium px-3 py-2 rounded fs-3 fw-bold text-#f2f2"
-                    style={{
-                      fontSize: '1.1rem',
-                      transition: 'all 0.3s ease'
-                    }}
-                  >
-                    {label}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-
-            <div className="ms-4">
-              {isLoggedIn ? (
-                <Dropdown>
-                  <Dropdown.Toggle 
-                    variant="outline-primary" 
-                    id="dropdown-basic"
-                    style={{
-                      fontSize: '1.1rem',
-                      padding: '0.5rem 1.25rem',
-                      borderRadius: '8px'
-                    }}
-                    className="fs-4 fw-bold"
-                  >
-                    <i className="bi bi-person-circle me-2"></i>
-                    Account
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu className="shadow-sm border-0">
-                    <Dropdown.Item 
-                      onClick={() => navigate('/profile')}
-                      className="py-2 fs-4 fw-bold"
-                    >
-                      <i className="bi bi-person me-2"></i>
-                      Profile
-                    </Dropdown.Item>
-                    <Dropdown.Item 
-                      onClick={handleLogout}
-                      className="py-2 text-danger fs-4 fw-bold"
-                    >
-                      <i className="bi bi-box-arrow-right me-2"></i>
-                      Logout
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              ) : (
-                <Button 
-                  variant="primary"
-                  onClick={() => navigate('/login')}
-                  className="ms-3 px-4 py-2 fs-3 fw-bold text-#f2f2"
-                  style={{
-                    fontSize: '1.1rem',
-                    borderRadius: '8px',
-                    boxShadow: '0 2px 8px rgba(13, 110, 253, 0.25)'
-                  }}
-                >
-                  <i className="bi bi-box-arrow-in-right me-2"></i>
-                  Login
-                </Button>
-              )}
-            </div>
-          </nav>
-
-          <div className="d-md-none">
-            <button 
-              onClick={toggleMenu} 
-              className="btn btn-outline-secondary p-2"
-              style={{
-                fontSize: '1.1rem',
-                borderRadius: '8px',
-                width: '44px',
-                height: '44px'
-              }}
-              aria-label="Toggle Menu"
-            >
-              <RxHamburgerMenu size={24} />
-            </button>
-          </div>
+    <header className="navbar-header shadow-sm" style={{ background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' }}>
+      <div className="container py-3 d-flex justify-content-between align-items-center">
+        {/* Logo + Title */}
+        <div className="d-flex align-items-center">
+          <img
+            src={logo}
+            alt="Bijoy Institute Logo"
+            style={{ height: '60px', cursor: 'pointer', transition: 'transform 0.2s' }}
+            onClick={() => navigate('/')}
+            onError={(e) => (e.currentTarget.src = 'https://via.placeholder.com/150')}
+          />
+          <h1 className="ms-3 fs-4 fw-bold mb-0 text-dark">Bijoy Institute</h1>
         </div>
 
-        {menuOpen && (
-          <div className="d-md-none mt-3 p-4 bg-white rounded shadow-lg" style={{
-            border: '1px solid rgba(0,0,0,0.1)',
-            animation: 'fadeIn 0.3s ease-out'
-          }}>
-            <ul className="nav flex-column gap-2">
-              {navLinks.map(({ path, label }) => (
-                <li className="nav-item" key={path}>
-                  <NavLink 
-                    to={path} 
-                    className="nav-link px-3 py-2 rounded fw-medium"
-                    style={{ fontSize: '1.1rem' }}
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    {label}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-
-            <div className="d-grid gap-3 mt-4">
-              {isLoggedIn ? (
-                <>
-                  <Button 
-                    variant="outline-primary"
-                    onClick={() => {
-                      navigate('/profile');
-                      setMenuOpen(false);
-                    }}
-                    className="py-2"
-                    style={{ fontSize: '1.1rem' }}
-                  >
-                    <i className="bi bi-person me-2"></i>
-                    Profile
-                  </Button>
-                  <Button 
-                    variant="danger"
-                    onClick={handleLogout}
-                    className="py-2"
-                    style={{ fontSize: '1.1rem' }}
-                  >
-                    <i className="bi bi-box-arrow-right me-2"></i>
-                    Logout
-                  </Button>
-                </>
-              ) : (
-                <Button 
-                  variant="primary"
-                  onClick={() => {
-                    navigate('/login');
-                    setMenuOpen(false);
-                  }}
-                  className="py-2"
-                  style={{ fontSize: '1.1rem' }}
+        {/* Desktop Nav */}
+        <nav className="d-none d-md-flex align-items-center">
+          <ul className="nav mb-0">
+            {navLinks.map(({ path, label }) => (
+              <li className="nav-item" key={path}>
+                <NavLink
+                  to={path}
+                  className={({ isActive }) =>
+                    `nav-link fw-bold px-3 py-2 rounded ${isActive ? 'text-primary' : 'text-dark'}`
+                  }
+                  style={{ fontSize: '1.6rem' }}
                 >
-                  <i className="bi bi-box-arrow-in-right me-2"></i>
-                  Login
-                </Button>
-              )}
-            </div>
+                  {label}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+
+          <div className="ms-4">
+            {isLoggedIn ? (
+              <Dropdown>
+                <Dropdown.Toggle variant="outline-primary" id="dropdown-basic" className="fs-5">
+                  <i className="bi bi-person-circle me-2"></i>Account
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => navigate('/profile')}>
+                    <i className="bi bi-person me-2"></i> Profile
+                  </Dropdown.Item>
+                  <Dropdown.Item className="text-danger" onClick={handleLogout}>
+                    <i className="bi bi-box-arrow-right me-2"></i> Logout
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            ) : (
+              <Button onClick={() => navigate('/login')} className="fs-5 px-4 py-2">
+                <i className="bi bi-box-arrow-in-right me-2"></i>Login
+              </Button>
+            )}
           </div>
-        )}
+        </nav>
+
+        {/* Mobile Hamburger */}
+        <button
+          onClick={toggleMenu}
+          className="btn btn-outline-secondary d-md-none"
+          style={{ width: '44px', height: '44px' }}
+        >
+          <RxHamburgerMenu size={24} />
+        </button>
       </div>
 
-      <style jsx>{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(-10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .nav-link:hover {
-          background-color: rgba(0,0,0,0.03);
-        }
-      `}</style>
+      {/* Mobile Menu */}
+      {menuOpen && (
+        <div className="d-md-none bg-white p-4 shadow-sm">
+          <ul className="nav flex-column">
+            {navLinks.map(({ path, label }) => (
+              <li className="nav-item" key={path}>
+                <NavLink
+                  to={path}
+                  className="nav-link fw-medium py-2"
+                  style={{ fontSize: '1.1rem' }}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {label}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-3 d-grid gap-2">
+            {isLoggedIn ? (
+              <>
+                <Button variant="outline-primary" onClick={() => { navigate('/profile'); setMenuOpen(false); }}>
+                  <i className="bi bi-person me-2"></i>Profile
+                </Button>
+                <Button variant="danger" onClick={handleLogout}>
+                  <i className="bi bi-box-arrow-right me-2"></i>Logout
+                </Button>
+              </>
+            ) : (
+              <Button variant="primary" onClick={() => { navigate('/login'); setMenuOpen(false); }}>
+                <i className="bi bi-box-arrow-in-right me-2"></i>Login
+              </Button>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 };

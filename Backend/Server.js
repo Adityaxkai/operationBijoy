@@ -114,7 +114,7 @@ app.post('/contactus',(req,res)=>{
 
 app.post('/login', async (req, res) => {
     try {
-        const sql = "SELECT Id, name, email, password, is_admin FROM signup WHERE email = ?";
+        const sql = "SELECT Id, name, email, password FROM signup WHERE email = ?";
         db.query(sql, [req.body.email.trim()], async (err, data) => {
             if (err) {
                 console.error("Database error:", err);
@@ -127,49 +127,60 @@ app.post('/login', async (req, res) => {
 
             const user = data[0];
             
-            // Normalize the password input
-            const inputPassword = req.body.password.trim();
-            
-            // Debug logs
-            console.log("Input password:", inputPassword);
+            // Enhanced debugging
+            console.log("Raw input password:", JSON.stringify(req.body.password));
+            console.log("Trimmed input password:", JSON.stringify(req.body.password.trim()));
             console.log("Stored hash:", user.password);
+            console.log("Hash length:", user.password.length);
+            console.log("Hash prefix:", user.password.substring(0, 4));
 
-            // First check if the password is already hashed (might be plaintext in DB)
-            if (user.password.length < 60) { // BCrypt hashes are always 60 chars
-                // If password is stored plaintext (shouldn't happen), hash it now
-                const hashedPassword = await bcrypt.hash(inputPassword, saltRound);
-                if (inputPassword === user.password) {
-                    // Update the DB with hashed password
-                    const updateSql = "UPDATE signup SET password = ? WHERE Id = ?";
-                    db.query(updateSql, [hashedPassword, user.Id], (updateErr) => {
-                        if (updateErr) console.error("Failed to update password hash:", updateErr);
-                    });
-                } else {
-                    return res.status(401).json({message: "Invalid credentials"});
-                }
-            } else {
-                // Normal bcrypt comparison
-                const isPasswordValid = await bcrypt.compare(inputPassword, user.password);
+            try {
+                const isPasswordValid = await bcrypt.compare(
+                    req.body.password.trim(),
+                    user.password
+                );
+
+                console.log("Comparison result:", isPasswordValid);
+                
                 if (!isPasswordValid) {
-                    return res.status(401).json({message: "Invalid credentials"});
+                    // Create a test hash to verify bcrypt is working
+                    const testHash = await bcrypt.hash('123456', 12);
+                    const testCompare = await bcrypt.compare('123456', testHash);
+                    
+                    return res.status(401).json({
+                        message: "Invalid credentials",
+                        debug: {
+                            inputLength: req.body.password.trim().length,
+                            hashLength: user.password.length,
+                            testComparison: testCompare,
+                            hashPrefix: user.password.substring(0, 30) + '...'
+                        }
+                    });
                 }
-            }
 
-            const token = jwt.sign(
-                {id: user.Id},
-                process.env.ACCESS_TOKEN_SECRET,
-                {expiresIn: '1h'}
-            );
-            return res.json({
-                message: "Login successful",
-                token: token,
-                user: {
-                  id: user.Id,
-                  name: user.name,
-                  email: user.email,
-                  is_admin: user.is_admin
-                }
-            });
+                const token = jwt.sign(
+                    {id: user.Id},
+                    process.env.ACCESS_TOKEN_SECRET,
+                    {expiresIn: '1h'}
+                );
+
+                return res.json({
+                    message: "Login successful",
+                    token: token,
+                    user: {
+                        id: user.Id,
+                        name: user.name,
+                        email: user.email
+                    }
+                });
+
+            } catch (compareError) {
+                console.error("Bcrypt compare error:", compareError);
+                return res.status(500).json({
+                    message: "Password comparison failed",
+                    error: compareError.message
+                });
+            }
         });
     } catch (error) {
         console.error("Login process error:", error);

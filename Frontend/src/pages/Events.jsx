@@ -1,21 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaCalendarAlt } from "react-icons/fa";
-import { usePrograms } from "../context/ProgramContext"; // Import context
+import { usePrograms } from "../context/ProgramContext";
 import "./Events.css";
 
 export const Events = () => {
   const [apiEvents, setApiEvents] = useState([]);
   const [error, setError] = useState(null);
-  const { programs } = usePrograms(); // ✅ Programs from Admin Panel
+  const { programs } = usePrograms(); // Programs from AdminPanel context
   const navigate = useNavigate();
 
+  // Fetch events from API and listen to server-sent updates
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8081/users');
-        if (!response.ok) throw new Error('Network response was not ok');
-        const data = await response.json();
+        const res = await fetch('http://localhost:8081/users');
+        if (!res.ok) throw new Error('Failed to fetch events');
+        const data = await res.json();
         setApiEvents(data);
       } catch (err) {
         console.error('Fetch error:', err);
@@ -24,43 +25,41 @@ export const Events = () => {
     };
 
     const setupSSE = () => {
-      const eventSource = new EventSource('http://localhost:8081/updates');
-      eventSource.onmessage = (e) => {
+      const source = new EventSource('http://localhost:8081/updates');
+      source.onmessage = (e) => {
         try {
           const newData = JSON.parse(e.data);
           setApiEvents(prev => [...prev, ...newData]);
         } catch (err) {
-          console.error('SSE parsing error:', err);
+          console.error('SSE parse error:', err);
         }
       };
-      eventSource.onerror = () => {
+      source.onerror = () => {
         console.error('SSE connection error');
-        eventSource.close();
+        source.close();
       };
-      return eventSource;
+      return source;
     };
 
     fetchData();
-    const eventSource = setupSSE();
-    return () => {
-      eventSource.close();
-    };
+    const sse = setupSSE();
+    return () => sse.close();
   }, []);
 
-  // ✅ Combine API events with Admin-added programs
+  // Merge API + AdminPanel events
   const combinedEvents = [
     ...apiEvents.map(event => ({
-      title: event.title,
+      title: event.title || "Untitled Event",
       date: event.date,
-      comment: event.comment,
-      image_path: event.image_path
+      comment: event.comment || "",
+      image_path: event.image_path || null,
     })),
     ...programs.map(program => ({
-      title: program.name,
+      title: program.name || "Untitled Program",
       date: program.date,
-      comment: program.details,
-      image_path: null
-    }))
+      comment: program.details || "",
+      image_path: null,
+    })),
   ];
 
   if (error) {
@@ -70,10 +69,7 @@ export const Events = () => {
   return (
     <section className="events-section">
       <h2 className="events-title">🎉 Upcoming Events</h2>
-<<<<<<< HEAD
-      {events.length === 0 ? (
-        <div className="loading-message fs-1 fw-bolder">Loading events...</div>
-=======
+
       {combinedEvents.length === 0 ? (
         <div className="loading-message">Loading events...</div>
 >>>>>>> be8619c (AdminpanlAdd)
@@ -82,21 +78,8 @@ export const Events = () => {
           {combinedEvents.map((event, index) => (
             <div className="event-card" key={index}>
               <div className="event-image-container">
-<<<<<<< HEAD
-                <img 
-                    src={event.image_path.startsWith('http') 
-                        ? event.image_path 
-                        : `http://localhost:8081${event.image_path}`} 
-                        alt={event.title}
-                    onError={(e) => {
-                        e.target.onerror = null; 
-                        e.target.src = '/placeholder-image.jpg'
-                    }}
-                    className="event-image"
-                  />
-=======
                 <img
-                  src={event.image_path || 'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e'}
+                  src={event.image_path || "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e"}
                   alt={event.title}
                   className="event-image"
                 />
@@ -104,16 +87,20 @@ export const Events = () => {
               </div>
               <div className="event-date-badge">
                 <FaCalendarAlt className="calendar-icon" />
-                {new Date(event.date).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric'
-                })}
+                {event.date
+                  ? new Date(event.date).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })
+                  : "Date TBA"}
               </div>
               <div className="event-content">
                 <h3>{event.title}</h3>
                 <p>{event.comment}</p>
-                <button className="register-btn" onClick={() => navigate('/register')}>Register</button>
+                <button className="register-btn" onClick={() => navigate("/register")}>
+                  Register
+                </button>
               </div>
             </div>
           ))}

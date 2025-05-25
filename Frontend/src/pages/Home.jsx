@@ -106,7 +106,7 @@ export const Home = () => {
                 rel="noopener noreferrer"
                 className="text-decoration-none text-primary ms-2 fw-bold hover-underline"
               >
-                Abhinav
+                Aditya
               </a>
             </div>
           </div>

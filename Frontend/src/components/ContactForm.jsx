@@ -62,7 +62,7 @@ const [message,setMessage]=useState("");
   return (
     <section className="contact-section">
       <div className="contact-container">
-        <h2 className="contact-title fw-bolder fs-1 text-primary ">📬 Contact Us</h2>
+        <h2 className="contact-title fw-bolder fs-1 text-primary ">📬 Any Queries</h2>
 
         {/* Contact Info */}
         <div className="contact-info">

@@ -18,7 +18,11 @@ function ProgramProvider({ children }) {
     setPrograms((prev) => [...prev, program]);
   };
 
-  const value = { programs, addProgram };
+  const deleteProgram = (index) => {
+    setPrograms((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const value = { programs, addProgram, deleteProgram };
 
   return (
     <ProgramContext.Provider value={value}>
