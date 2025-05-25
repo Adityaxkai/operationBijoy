@@ -72,7 +72,6 @@ export const Events = () => {
 
       {combinedEvents.length === 0 ? (
         <div className="loading-message">Loading events...</div>
->>>>>>> be8619c (AdminpanlAdd)
       ) : (
         <div className="events-grid">
           {combinedEvents.map((event, index) => (
@@ -83,7 +82,6 @@ export const Events = () => {
                   alt={event.title}
                   className="event-image"
                 />
->>>>>>> be8619c (AdminpanlAdd)
               </div>
               <div className="event-date-badge">
                 <FaCalendarAlt className="calendar-icon" />
