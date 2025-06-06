@@ -83,30 +83,26 @@ export const Home = () => {
               </div>
               <div className="text-white-50 fs-3">
                 <i className="bi bi-geo-alt me-2"></i>
-                123 Badminton Street, Giridih, India
+                Gridih, Jharkhand, India
               </div>
             </div>
           </div>
 
           <hr className="my-4 bg-secondary" />
-
           <div className="d-flex flex-column flex-md-row justify-content-between align-items-center">
             <div className="mb-3 mb-md-0 fs-4">
               &copy; {new Date().getFullYear()} Bijoy Institute. All rights reserved.
             </div>
             <div className="d-flex align-items-center fs-4">
-              <span className="me-2">Made with</span>
-              <span className="heart-beat text-danger fs-1">
-                <i className="bi bi-heart-fill"></i>
-              </span>
+              <span className="me-2">Designed and Developed </span>
               <span className="ms-2">by</span>
               <a 
-                href="https://abhinavjha.netlify.app/" 
+                href="https://rvitsolution.in/#" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-decoration-none text-primary ms-2 fw-bold hover-underline"
               >
-                Abhinav
+                 <img src="https://rvitsolution.in/img/logo.png" alt="RV IT Solutions Logo" style={{ height: '50px', verticalAlign: 'middle', backgroundColor: 'white', borderRadius: '5px' }}/>
               </a>
             </div>
           </div>

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Alert } from 'react-bootstrap';
-import  apiFetch  from './api';
+import apiFetch from './api';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 const AdminContacts = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -9,30 +10,57 @@ const AdminContacts = () => {
 
   useEffect(() => {
     const fetchMessages = async () => {
-        try {
-            setLoading(true);
-            const data = await apiFetch('/admin/contacts');
-            if (data && Array.isArray(data)) {
-                setMessages(data);
-            } else {
-                setError('Invalid data format received');
-            }
-        } catch (err) {
-            console.error('Fetch error:', err);
-            setError(err.message || 'Failed to load messages');
-        } finally {
-            setLoading(false);
+      try {
+        setLoading(true);
+        console.log('Current token:', localStorage.getItem('authToken'));
+        
+        const data = await apiFetch('/contacts/admin/list');
+        if (!data) {
+          throw new Error('Received empty response from server');
         }
+        console.log('API Response:', data);
+        
+        if (data.length > 0) {
+          console.log('First message object:', data[0]);
+          console.log('Available keys:', Object.keys(data[0]));
+        }
+        
+        setMessages(data || []);
+        setError('');
+      } catch (err) {
+        console.error('Full error details:', {
+          message: err.message,
+          response: err.response,
+          stack: err.stack
+        });
+        
+        let errorMsg = err.message;
+        if (err.response?.data?.details) {
+          errorMsg += ` (${err.response.data.details})`;
+        }
+        
+        setError(errorMsg);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchMessages();
-}, []);
+  }, []);
 
   const handleDelete = async (id) => {
+    if (!id) {
+      setError('Invalid message ID');
+      return;
+    }
+
     try {
-      await apiFetch(`/admin/contacts/${id}`, { method: 'DELETE' });
+      await apiFetch(`/contacts/admin/delete/${id}`, {
+        method: 'DELETE'
+      });
       setMessages(messages.filter(msg => msg.id !== id));
     } catch (err) {
-      setError(err.message);
+      console.error('Delete error:', err);
+      setError(err.message || 'Failed to delete message');
     }
   };
 
@@ -52,7 +80,7 @@ const AdminContacts = () => {
       </thead>
       <tbody>
         {messages.map((message, index) => (
-          <tr key={message.id}>
+          <tr key={message.id || `message-${index}`}>
             <td>{index + 1}</td>
             <td>{message.name}</td>
             <td>{message.email}</td>

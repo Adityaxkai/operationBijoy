@@ -16,29 +16,33 @@ const AdminEvents = () => {
   });
 
   useEffect(() => {
-    const fetchEvents = async () => {
-        try {
-            setLoading(true);
-            const data = await apiFetch('/admin/events');
-            
-            // Ensure all events have the required properties
-            const formattedEvents = data.map(event => ({
-                id: event.id,
-                title: event.title || '',
-                comment: event.comment || '',
-                date: event.date || new Date().toISOString(),
-                image_path: event.image_path || null
-            }));
-            
-            setEvents(formattedEvents);
-            setError('');
-
-        } catch (err) {
-            setError(err.message);
-        } finally {
-            setLoading(false);
-        }
-    };
+  const fetchEvents = async () => {
+  try {
+    setLoading(true);
+    const data = await apiFetch('/events/admin/list');
+    
+    const formattedEvents = data.map(event => ({
+      id: event.id,
+      title: event.title || '',
+      comment: event.comment || '',
+      date: event.date || new Date().toISOString(),
+      image_path: event.image_path || null
+    }));
+    
+    setEvents(formattedEvents);
+    setError('');
+  } catch (err) {
+    console.error('Fetch events error:', err);
+    setError(err.message);
+    
+    // Handle specific database errors
+    if (err.message.includes('pool') || err.message.includes('database')) {
+      setError('Database connection error - please try again later');
+    }
+  } finally {
+    setLoading(false);
+  }
+};
     fetchEvents();
 }, []);
 
@@ -58,49 +62,47 @@ const AdminEvents = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+// Update the form submission to use apiFetch
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  // Validate required fields
+  if (!formData.title || !formData.comment || !formData.date || !formData.image) {
+    setError('All fields including image are required');
+    return;
+  }
+
+  const formDataToSend = new FormData();
+  formDataToSend.append('title', formData.title);
+  formDataToSend.append('comment', formData.comment);
+  formDataToSend.append('date', formData.date);
+  formDataToSend.append('image', formData.image);
+
+  try {
+    const newEvent = await apiFetch('/events/admin/create', { 
+      method: 'POST',
+      body: formDataToSend
+    });
     
-    const formDataToSend = new FormData();
-    formDataToSend.append('title', formData.title);
-    formDataToSend.append('comment', formData.comment);
-    formDataToSend.append('date', formData.date);
-    if (formData.image) {
-        formDataToSend.append('image', formData.image);
-    }
-
-    try {
-        const response = await fetch('http://localhost:8081/admin/events', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-            },
-            body: formDataToSend
-        });
-
-        if (!response.ok) throw new Error('Failed to create event');
-        
-        const newEvent = await response.json();
-        
-        // Update the events state with the complete event data
-        setEvents(prevEvents => [newEvent, ...prevEvents]);
-        
-        setShowModal(false);
-        setFormData({
-            title: '',
-            comment: '',
-            date: '',
-            image: null,
-            imagePreview: ''
-        });
-    } catch (err) {
-        setError(err.message);
-    }
+    setEvents(prevEvents => [newEvent, ...prevEvents]);
+    setShowModal(false);
+    setFormData({
+      title: '',
+      comment: '',
+      date: '',
+      image: null,
+      imagePreview: ''
+    });
+    setError('');
+  } catch (err) {
+    console.error('Create event error:', err);
+    setError(err.message || 'Failed to create event');
+  }
 };
 
   const handleDelete = async (id) => {
     try {
-      await apiFetch(`/admin/events/${id}`, { method: 'DELETE' });
+      await apiFetch(`/events/admin/delete/${id}`, { method: 'DELETE' });
       setEvents(events.filter(event => event.id !== id));
     } catch (err) {
       setError(err.message);
@@ -139,9 +141,9 @@ const AdminEvents = () => {
               <td>
                 {event.image_path ? (
                     <img 
-                        src={event.image_path.startsWith('http') 
-                            ? event.image_path 
-                            : `http://localhost:8081${event.image_path}`} 
+                    src={event.image_path.startsWith('http') 
+                        ? event.image_path 
+                        : `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}${event.image_path}`} 
                         alt="Event" 
                         style={{ width: '100px' }}
                         onError={(e) => {

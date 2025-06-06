@@ -10,7 +10,7 @@ export const Events = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:8081/users');
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/public`);
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         setEvents(data);
@@ -21,7 +21,7 @@ export const Events = () => {
     };
 
     const setupSSE = () => {
-      const eventSource = new EventSource('http://localhost:8081/updates');
+      const eventSource = new EventSource(`${import.meta.env.VITE_API_BASE_URL}/events/updates`);
       
       eventSource.onmessage = (e) => {
         try {
@@ -63,10 +63,10 @@ export const Events = () => {
             <div className="event-card" key={index}>
               <div className="event-image-container">
                 <img 
-                    src={event.image_path.startsWith('http') 
+                      src={event.image_path.startsWith('http') 
                         ? event.image_path 
-                        : `http://localhost:8081${event.image_path}`} 
-                        alt={event.title}
+                        : `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}${event.image_path}`} 
+                        alt={event.title}    
                     onError={(e) => {
                         e.target.onerror = null; 
                         e.target.src = '/placeholder-image.jpg'

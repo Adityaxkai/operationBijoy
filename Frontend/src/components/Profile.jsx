@@ -23,7 +23,7 @@ const Profile = () => {
     const fetchUserData = async () => {
       try {
         setIsLoading(true);
-        const data = await apiFetch('/profile');
+        const data = await apiFetch(`/users/profile`);
         setUserData({
           name: data.name,
           email: data.email,
@@ -47,43 +47,52 @@ const Profile = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      await apiFetch('/profile', {
+      await apiFetch(`/users/profile`, {
         method: 'PUT',
         body: JSON.stringify(formData)
       });
       
-      setUserData({ ...formData });
+      // Preserve the is_admin status when updating userData
+      setUserData({ 
+        ...formData,
+        is_admin: userData.is_admin // Keep the existing admin status
+      });
       setIsEditing(false);
     } catch (error) {
       console.error('Update error:', error);
       setError(error.message);
     }
-  };
+};
 
-  const handlePasswordSubmit = async (e) => {
+const handlePasswordSubmit = async (e) => {
     e.preventDefault();
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      setError("New passwords don't match");
-      return;
+        setError("New passwords don't match");
+        return;
     }
 
     try {
-      await apiFetch('/change-password', {
-        method: 'POST',
-        body: JSON.stringify({
-          currentPassword: passwordData.currentPassword,
-          newPassword: passwordData.newPassword
-        })
-      });
+        const response = await apiFetch(`/users/change-password`, {
+            method: 'POST',
+            body: JSON.stringify({
+                currentPassword: passwordData.currentPassword,
+                newPassword: passwordData.newPassword
+            })
+        });
 
-      setIsChangingPassword(false);
-      setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-      setError(null);
+        if (response.message) {
+            // Success case
+            setIsChangingPassword(false);
+            setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+            setError(null);
+        } else {
+            setError(response.error || "Password change failed");
+        }
     } catch (error) {
-      console.error('Password change error:', error);
-      setError(error.message);
+        console.error('Password change error:', error);
+        setError(error.message || "Password change failed");
     }
-  };
+};
 
 
   if (isLoading) {

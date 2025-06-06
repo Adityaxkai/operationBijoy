@@ -37,7 +37,7 @@ const Signup = () => {
     if (Object.keys(validationErrors).length === 0) {
       setIsLoading(true);
       try {
-        const response = await fetch('http://localhost:8081/signup', {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/signup`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -67,7 +67,8 @@ const Signup = () => {
   };
 
   return (
-    <div className="auth-container fs-3 fw-normal no-scrollbar">
+    <div className="auth-container fs-3 fw-normal no-scrollbar d-flex flex-column">
+      <Link to="/" className="text-center cta-button control auth-logo text-decoration-none">Home</Link>
       <div className="auth-card">
         <h2 className="auth-title">Create Your Account</h2>
         <p className="auth-subtitle">Sign up to join Bijoy Institute.</p>
