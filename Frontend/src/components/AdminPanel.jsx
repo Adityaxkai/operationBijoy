@@ -23,7 +23,7 @@ const AdminPanel = () => {
         }
   
         // 2. Double-check with backend (optional but safer)
-        const profile = await apiFetch('/profile');
+        const profile = await apiFetch('/users/profile');
         if (!profile.is_admin) {
           navigate('/');
           return;

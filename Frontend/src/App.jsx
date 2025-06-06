@@ -14,7 +14,7 @@ import Profile from './components/Profile';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import AdminPanel from './components/AdminPanel';
-// A wrapper to conditionally show components based on route
+import AdmissionForm from './pages/AdmissionForm';
 function AppContent() {
   const location = useLocation();
   const isLoginPage = location.pathname === '/login' || location.pathname === '/signup';
@@ -34,6 +34,7 @@ function AppContent() {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/admin" element={<AdminPanel />} />
+          <Route path='/admission' element={<AdmissionForm />} />
           <Route path="*" element={<div>404 Not Found</div>} />
         </Routes>
     </>

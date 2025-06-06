@@ -40,6 +40,7 @@ export const ImageSlider = () => {
         loop={true}
         spaceBetween={0}
         slidesPerView={1}
+        className="image-control"
       >
         {slides.map((img, idx) => (
           <SwiperSlide key={idx}>
