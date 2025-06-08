@@ -38,7 +38,7 @@ export const Navbar = () => {
           <div className="d-flex align-items-center ">
             <div className="me-3">
               <img 
-                src="/src/assets/Picture2.png" 
+                src="assets/Picture2.png" 
                 alt="logo" 
                 style={{ 
                   height: '65px',

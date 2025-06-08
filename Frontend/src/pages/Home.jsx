@@ -28,7 +28,7 @@ export const Home = () => {
             <div className="col-md-4">
               <h3 className="fs-3 fw-bold mb-4">
                 <img 
-                  src="/src/assets/Picture2.png" 
+                  src="assets/Picture2.png" 
                   alt="Bijoy Institute Logo" 
                   style={{ height: '50px', marginRight: '10px' }}
                 />

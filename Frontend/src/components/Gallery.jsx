@@ -11,20 +11,20 @@ export const Gallery = () => {
   const [photoIndex, setPhotoIndex] = useState(0);
 
   // Sample images with rotation
-  const images = [
-    { src: 'src/assets/images/gallery1.jpg', alt: 'Established' },
-    { src: 'src/assets/images/gallery2.jpg', alt: 'Established' },
-    { src: 'src/assets/images/gallery3.jpg', alt: 'Established' },
-    { src: 'src/assets/images/gallery4.jpg', alt: 'Award Ceremony' },
-    { src: 'src/assets/images/gallery5.jpg', alt: 'Established' },
-    { src: 'src/assets/images/gallery6.jpg', alt: 'Established' },
-    { src: 'src/assets/images/gallery7.jpg', alt: 'Achievements' },
-    { src: 'src/assets/images/gallery8.jpg', alt: 'Achievements' },
-    { src: 'src/assets/images/gallery9.jpg', alt: 'Achievements' },
-    { src: 'src/assets/images/gallery10.jpg', alt: 'Alumni meet' },
-    { src: 'src/assets/images/gallery11.jpg', alt: 'Alumni meet' },
-    { src: 'src/assets/images/gallery12.jpg', alt: 'Alumni meet' },
-  ].map(img => ({
+ const images = [
+  { src: 'assets/images/gallery1.jpg', alt: 'Established' },
+  { src: 'assets/images/gallery2.jpg', alt: 'Established' },
+  { src: 'assets/images/gallery3.jpg', alt: 'Established' },
+  { src: 'assets/images/gallery4.jpg', alt: 'Award Ceremony' },
+  { src: 'assets/images/gallery5.jpg', alt: 'Established' },
+  { src: 'assets/images/gallery6.jpg', alt: 'Established' },
+  { src: 'assets/images/gallery7.jpg', alt: 'Achievements' },
+  { src: 'assets/images/gallery8.jpg', alt: 'Achievements' },
+  { src: 'assets/images/gallery9.jpg', alt: 'Achievements' },
+  { src: 'assets/images/gallery10.jpg', alt: 'Alumni meet' },
+  { src: 'assets/images/gallery11.jpg', alt: 'Alumni meet' },
+  { src: 'assets/images/gallery12.jpg', alt: 'Alumni meet' },
+].map(img => ({
     ...img,
     rotatedSrc: img.src // In a real app, you'd create rotated versions
   }));

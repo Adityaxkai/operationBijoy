@@ -1,4 +1,4 @@
-// server.js
+
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -104,6 +104,15 @@ try {
   console.error('❌ Error loading contactRoutes:', error.message);
 }
 
+try{
+  console.log("Loading admissionRoutes...");
+  const admissionRoutes=await import('./routes/admissionRoutes.js');
+  app.use('/api/admission', admissionRoutes.default);
+  console.log("✅ admissionRoutes loaded successfully");
+}
+catch(error){
+  console.error('❌ Error loading admissionRoutes:', error.message);
+}
 
 // Health check
 app.get('/api/health', (req, res) => {

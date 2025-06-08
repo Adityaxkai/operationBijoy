@@ -14,7 +14,9 @@ const AdminEvents = () => {
     image: null,
     imagePreview: '',
   });
-
+   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+  
   useEffect(() => {
   const fetchEvents = async () => {
   try {
@@ -100,11 +102,17 @@ const handleSubmit = async (e) => {
   }
 };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async () => {
     try {
-      await apiFetch(`/events/admin/delete/${id}`, { method: 'DELETE' });
-      setEvents(events.filter(event => event.id !== id));
+      await apiFetch(`/events/admin/delete/${selectedId}`, { method: 'DELETE' });
+      setEvents(events.filter(event => event.id !== selectedId));
+      setShowDeleteModal(false);
+      setSelectedId(null);
+      setError('');
+      
     } catch (err) {
+      console.error('Delete error:', err);
+      setLoading(false);
       setError(err.message);
     }
   };
@@ -156,10 +164,13 @@ const handleSubmit = async (e) => {
                     )}
                 </td>
               <td>
-                <Button 
-                  variant="danger" 
+                <Button
+                  variant="danger"
                   size="sm"
-                  onClick={() => handleDelete(event.id)}
+                  onClick={() => {
+                    setSelectedId(event.id);
+                    setShowDeleteModal(true);
+                  }}
                   className='fs-4 fw-normal'
                 >
                   Delete
@@ -169,6 +180,10 @@ const handleSubmit = async (e) => {
           ))}
         </tbody>
       </Table>
+      <div className="mt-2 text-muted fs-4 fw-bold mb-4">
+            Showing {events.length} records
+      </div>
+
 
       <Modal show={showModal} onHide={() => setShowModal(false)} size='lg'>
         <Modal.Header closeButton>
@@ -231,6 +246,31 @@ const handleSubmit = async (e) => {
             </Button>
           </Form>
         </Modal.Body>
+      </Modal>
+
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Deletion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Are you sure you want to delete this Event?</p>
+          <p className="text-danger">
+            <strong>This action cannot be undone.</strong>
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleDelete}>
+            {loading ? (
+              <>
+                <Spinner animation="border" size="sm" className="me-2" />
+                Deleting...
+              </>
+            ) : 'Delete'}
+          </Button>
+        </Modal.Footer>
       </Modal>
     </>
   );
