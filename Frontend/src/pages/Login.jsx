@@ -18,15 +18,21 @@ const Login = () => {
     if (token) {
       try {
         const decoded = jwt_decode(token); // Use jwt_decode correctly
+        // Verify token structure
+        if (!decoded || typeof decoded !== 'object') {
+          throw new Error('Invalid token format');
+        }
         if (decoded && decoded.exp * 1000 < Date.now()) {
           // Token expired, log out
           localStorage.removeItem('authToken');
           localStorage.removeItem('isLoggedIn');
+          throw new Error('Token expired');
         }
       } catch (e) {
         console.error("Token decode error:", e);
         localStorage.removeItem('authToken');
         localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('user');
       }
     }
   }, []);

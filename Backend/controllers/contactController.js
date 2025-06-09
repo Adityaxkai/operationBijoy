@@ -36,6 +36,9 @@ export const getContacts = async (req, res) => {
     console.log('Attempting to fetch contacts...');
     const contacts = await Contact.getAll();
     console.log('Successfully fetched contacts:', contacts.length);
+     if (!contacts || contacts.length === 0) {
+      return res.status(200).json([]);
+    }
     res.json(contacts);
   } catch (error) {
     console.error('Detailed controller error:', {

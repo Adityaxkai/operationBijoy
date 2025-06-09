@@ -25,8 +25,8 @@ export const isAdmin = async (req, res, next) => {
             throw new Error('Database connection not established');
         }
 
-        const [rows] = await pool.query(
-            "SELECT is_admin FROM signup WHERE Id = ?", 
+        const {rows} = await pool.query(
+            "SELECT is_admin FROM signup WHERE Id = $1", 
             [req.user.id]
         );
         

@@ -14,9 +14,16 @@ const __dirname = path.dirname(__filename);
 export const getPublicEvents = async (req, res) => {
     try {
         const events = await Event.getAll();
+        if (!events || events.length === 0) {
+            return res.status(200).json([]);
+        }
         res.json(events);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Get public events error:', error);
+        res.status(500).json({ 
+            error: 'Failed to fetch events',
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
     }
 };
 
@@ -39,20 +46,23 @@ export const createEvent = async (req, res) => {
         
         const imagePath = `/public/uploads/${req.file.filename}`;
         
-        const result = await Event.create({ 
+        const newEvent = await Event.create({ 
             image_path: imagePath, 
-            title, 
-            comment, 
-            date 
+            title: req.body.title, 
+            comment: req.body.comment, 
+            date: req.body.date 
         });
-        
-        const newEvent = await Event.getById(result.insertId);
         res.status(201).json(newEvent);
     } catch (error) {
-        console.error('Create event error:', error);
+        console.error('Create event error:', {
+            message: error.message,
+            stack: error.stack,
+            dbError: error.code
+        });
+        
         res.status(500).json({ 
-            error: error.message,
-            details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+            error: 'Failed to create event',
+            details: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
 };

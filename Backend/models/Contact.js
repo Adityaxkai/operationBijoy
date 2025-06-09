@@ -8,11 +8,10 @@ class Contact {
         throw new Error('Database pool is not initialized');
       }
       
-      const [result] = await pool.query(
-        "INSERT INTO contactus (name, email, message, created_at) VALUES (?, ?, ?, NOW())",
-        [name, email, message]
-      );
-      return result;
+       const { rows } = await pool.query(
+      "INSERT INTO contactus (name, email, message) VALUES ($1, $2, $3) RETURNING *",
+      [name, email, message]);
+      return rows[0];
     } catch (error) {
       console.error('Error creating contact:', error);
       throw new Error(`Failed to create contact: ${error.message}`);
@@ -26,8 +25,8 @@ static async getAll() {
     }
     
     console.log('Executing contact query...');
-    const [rows] = await pool.query(
-    "SELECT Id as id, name, email, message, created_at FROM contactus ORDER BY created_at DESC"
+    const {rows} = await pool.query(
+    "SELECT id, name, email, message, created_at FROM contactus ORDER BY created_at DESC"
     );
     console.log('Query successful, rows found:', rows.length);
     return rows;
@@ -52,16 +51,16 @@ static async getAll() {
       throw new Error('Contact ID is required');
     }
     
-    const [result] = await pool.query(
-      "DELETE FROM contactus WHERE id = ?",
+    const { rowCount } = await pool.query(
+      "DELETE FROM contactus WHERE id = $1",
       [id]
     );
     
-    if (result.affectedRows === 0) {
+    if (rowCount === 0) {
       throw new Error('No contact found with that ID');
     }
     
-    return result;
+    return rowCount;
   } catch (error) {
     console.error('Error deleting contact:', error);
     throw error;
@@ -75,8 +74,8 @@ static async getAll() {
         throw new Error('Database pool is not initialized');
       }
       
-      const [rows] = await pool.query(
-        "SELECT id, name, email, message, created_at FROM contactus WHERE id = ?",
+      const {rows} = await pool.query(
+        "SELECT id, name, email, message, created_at FROM contactus WHERE id = $1",
         [id]
       );
       return rows[0];

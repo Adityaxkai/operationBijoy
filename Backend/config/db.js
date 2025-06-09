@@ -1,8 +1,11 @@
-import mysql from 'mysql2/promise';
+// import mysql from 'mysql2/promise';
+import pg from 'pg';
 import dotenv from 'dotenv';
 
 // Load environment variables first
 dotenv.config();
+
+const {Pool}=pg;
 
 // Verify environment variables are loaded
 console.log('Environment check:');
@@ -13,14 +16,14 @@ console.log('DB_PORT:', process.env.DB_PORT);
 
 // Configuration with fallbacks and validation
 const dbConfig = {
-  host: process.env.DB_HOST || 'localhost',
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  port: parseInt(process.env.DB_PORT) || 3306,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
+  port: parseInt(process.env.DB_PORT),
+  ssl: {
+    rejectUnauthorized: false
+  }
 };
 
 // Validate required config
@@ -37,18 +40,18 @@ console.log('Database configuration:', {
 // Create the pool with error handling
 let pool;
 try {
-  pool = mysql.createPool(dbConfig);
-  console.log('✅ Database pool created successfully');
+  pool = new Pool(dbConfig);
+  console.log('✅ PostgreSQL pool created successfully');
   
   // Test connection immediately
   (async () => {
     try {
-      const connection = await pool.getConnection();
+      const connection = await pool.connect();
       console.log('✅ Successfully connected to database');
       
       // Test a simple query
-      const [rows] = await connection.query('SELECT 1 as test');
-      console.log('✅ Database query test successful:', rows[0]);
+      const res = await connection.query('SELECT 1 as test');
+      console.log('✅ Database query test successful:', res.rows[0]);
       
       connection.release();
     } catch (err) {

@@ -32,7 +32,7 @@ export const login = async (req, res) => {
             if (password.trim() !== user.password) {
                 return res.status(401).json({ message: "Invalid credentials" });
             }
-            await User.updatePassword(user.Id, hashedPassword);
+            await User.updatePassword(user.id, hashedPassword);
         } else {
             const isPasswordValid = await bcrypt.compare(password.trim(), user.password);
             if (!isPasswordValid) {
@@ -41,7 +41,7 @@ export const login = async (req, res) => {
         }
         
         const token = jwt.sign(
-            { id: user.Id, is_admin: user.is_admin },
+            { id: user.id, is_admin: user.is_admin },
             jwtConfig.secret,
             { expiresIn: jwtConfig.expiresIn }
         );
@@ -50,7 +50,7 @@ export const login = async (req, res) => {
             message: "Login successful",
             token,
             user: {
-                id: user.Id,
+                id: user.id,
                 name: user.name,
                 email: user.email,
                 is_admin: user.is_admin

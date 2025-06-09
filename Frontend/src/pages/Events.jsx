@@ -11,12 +11,20 @@ export const Events = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/events/public`);
-        if (!response.ok) throw new Error('Network response was not ok');
+        if (!response.ok) {
+          if (response.status === 404 || response.status === 204) {
+            setEvents([]);
+            return;
+          }
+          throw new Error(`Server responded with ${response.status}`);
+        }
         const data = await response.json();
-        setEvents(data);
+        setEvents(Array.isArray(data)?data:[]);
+        // console.log('Fetched events:', data);
       } catch (err) {
         console.error('Fetch error:', err);
         setError(err.message);
+        setEvents([]);
       }
     };
 
@@ -49,14 +57,28 @@ export const Events = () => {
   }, []);
 
   if (error) {
-    return <div className="error-message">Error loading events: {error}</div>;
+    return <div className="error-message text-danger fs-4 fw-bold mt-5 p-5">Error loading events: {error}</div>;
   }
 
   return (
     <section className="events-section">
       <h2 className="events-title">🎉 Upcoming Events</h2>
       {events.length === 0 ? (
-        <div className="loading-message fs-1 fw-bolder">Loading events...</div>
+        <div className="empty-state">
+          <div className="empty-icon">📅</div>
+          <h3 className="empty-title">No Events Scheduled Yet</h3>
+          <p className="empty-message">
+            Check back later for an upcoming events.
+          </p>
+          {events.isAdmin && (
+            <button 
+              className="btn btn-primary"
+              onClick={() => navigate('/admin/events/create')}
+            >
+              Create Your First Event
+            </button>
+          )}
+        </div>
       ) : (
         <div className="events-grid">
           {events.map((event, index) => (

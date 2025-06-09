@@ -12,18 +12,21 @@ const AdminContacts = () => {
     const fetchMessages = async () => {
       try {
         setLoading(true);
-        console.log('Current token:', localStorage.getItem('authToken'));
+        // console.log('Current token:', localStorage.getItem('authToken'));
         
         const data = await apiFetch('/contacts/admin/list');
         if (!data) {
           throw new Error('Received empty response from server');
         }
-        console.log('API Response:', data);
-        
-        if (data.length > 0) {
-          console.log('First message object:', data[0]);
-          console.log('Available keys:', Object.keys(data[0]));
+        if (!Array.isArray(data)) {
+          throw new Error('Invalid data format received');
         }
+        // console.log('API Response:', data);
+        
+        // if (data.length > 0) {
+        //   console.log('First message object:', data[0]);
+        //   console.log('Available keys:', Object.keys(data[0]));
+        // }
         
         setMessages(data || []);
         setError('');
@@ -64,10 +67,11 @@ const AdminContacts = () => {
     }
   };
 
-  if (loading) return <div>Loading messages...</div>;
+  if (loading) return <div className='fs-4 fw-normal text-primary'>Loading messages...</div>;
   if (error) return <Alert variant="danger">{error}</Alert>;
 
   return (
+    <>
     <Table striped bordered hover responsive cellPadding={0} cellSpacing={0} className='table fs-4 fw-normal'>
       <thead>
         <tr>
@@ -99,6 +103,10 @@ const AdminContacts = () => {
         ))}
       </tbody>
     </Table>
+    <div className="mt-2 text-muted fs-4 fw-bold mb-4">
+        Showing {messages.length} records
+    </div>
+    </>
   );
 };
 

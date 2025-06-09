@@ -81,6 +81,7 @@ const handleSubmit = async (e) => {
   formDataToSend.append('image', formData.image);
 
   try {
+    setLoading(true);
     const newEvent = await apiFetch('/events/admin/create', { 
       method: 'POST',
       body: formDataToSend
@@ -97,8 +98,15 @@ const handleSubmit = async (e) => {
     });
     setError('');
   } catch (err) {
-    console.error('Create event error:', err);
+    console.error('Create event error:', {
+      message: err.message,
+      response: err.response
+    });
+    
     setError(err.message || 'Failed to create event');
+  }
+  finally{
+    setLoading(false);
   }
 };
 
