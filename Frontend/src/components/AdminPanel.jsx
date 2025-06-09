@@ -4,6 +4,7 @@ import { Tab, Tabs, Button, Container, Spinner, Alert } from 'react-bootstrap';
 import AdminContacts from './AdminContacts';
 import AdminEvents from './AdminEvents';
 import apiFetch from './api';
+import AdminAdmissions from './AdminAdmission';
 
 const AdminPanel = () => {
   const [activeTab, setActiveTab] = useState('contacts');
@@ -16,14 +17,12 @@ const AdminPanel = () => {
       try {
         const user = JSON.parse(localStorage.getItem('user'));
         
-        // 1. Check localStorage first
         if (!user || !user.is_admin) {
           navigate('/');
           return;
         }
   
-        // 2. Double-check with backend (optional but safer)
-        const profile = await apiFetch('/profile');
+        const profile = await apiFetch('/users/profile');
         if (!profile.is_admin) {
           navigate('/');
           return;
@@ -85,6 +84,9 @@ const AdminPanel = () => {
         </Tab>
         <Tab eventKey="events" title="Events">
           <AdminEvents />
+        </Tab>
+        <Tab eventKey='admissions' title="Admissions">
+          <AdminAdmissions />
         </Tab>
       </Tabs>
     </Container>

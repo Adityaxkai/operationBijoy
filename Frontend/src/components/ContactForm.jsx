@@ -29,7 +29,7 @@ const [message,setMessage]=useState("");
     if (Object.keys(validationErrors).length === 0) {
       setIsLoading(true);
       try {
-        const response = await fetch('http://localhost:8081/contactus', {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/contacts/submit`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -46,6 +46,7 @@ const [message,setMessage]=useState("");
         if (response.ok) {
             setMessage('Message sent successfully!');
             setFormData({ name: '', email: '', message: '' });
+            setErrors({});
         } else {
           // Handle server validation errors
           setErrors({ submit: data.message || 'Please Try After Sometime' });
@@ -66,12 +67,11 @@ const [message,setMessage]=useState("");
 
         {/* Contact Info */}
         <div className="contact-info">
-          <p><strong>📞 Phone:</strong> +91 98765 43210</p>
-          <p><strong>📧 Email:</strong> info@yourclub.com</p>
-          <p><strong>📍 Visit Us:</strong> 123 Main Street, New Delhi, India</p>
+          <p><strong>📞 Phone:</strong> +91 7209678999</p>
+          <p><strong>📧 Email:</strong> info@rv.in</p>
+          <p><strong>📍 Visit Us:</strong> Gridih, Jharkhand, India</p>
         </div>
 
-        {/* Contact Form */}
         {message && <div className="alert alert-success fs-4 fw-4">{message}</div>}
         <form className="contact-form" onSubmit={handleSubmit}>
         <input

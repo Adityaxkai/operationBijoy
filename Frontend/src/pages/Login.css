@@ -59,6 +59,10 @@
     cursor: pointer;
     margin-top: 0.5rem;
   }
+  .control{
+    max-width: 200px;
+    width: 100%;
+  }
   
   .cta-button:hover {
     background-color: #002855;

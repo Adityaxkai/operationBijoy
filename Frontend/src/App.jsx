@@ -11,14 +11,15 @@ import Register from './pages/Register';
 import Signup from './pages/Signup';
 import AuthChecker from './Wrapper/AuthChecker';
 import Profile from './components/Profile';
-import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import AdminPanel from './components/AdminPanel';
-// A wrapper to conditionally show components based on route
+import AdmissionForm from './pages/AdmissionForm';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
 function AppContent() {
   const location = useLocation();
   const isLoginPage = location.pathname === '/login' || location.pathname === '/signup';
-
+  const isAdmission=location.pathname === '/admission';
   return (
     <>
         {!isLoginPage && <Navbar />} {/* Hide Navbar on login/signup */}
@@ -34,7 +35,7 @@ function AppContent() {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/admin" element={<AdminPanel />} />
-          <Route path="*" element={<div>404 Not Found</div>} />
+          {isAdmission?null:<Route path="*" element={<div>404 Not Found</div>} />}
         </Routes>
     </>
   );
@@ -42,9 +43,14 @@ function AppContent() {
 
 function App() {
   return (
+    <>
     <AuthChecker>
       <AppContent />
     </AuthChecker>
+    <Routes>
+      <Route path='/admission' element={<AdmissionForm />} />
+    </Routes>
+    </>
   );
 }
 

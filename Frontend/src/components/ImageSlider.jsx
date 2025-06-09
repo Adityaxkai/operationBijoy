@@ -1,10 +1,13 @@
 import { Swiper, SwiperSlide } from "swiper/react";
+import { useNavigate } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/autoplay";
 import { Autoplay } from "swiper/modules";
 import "./ImageSlider.css";
+import AdmissionForm from '../pages/AdmissionForm'
 
 export const ImageSlider = () => {
+  const navigate=useNavigate();
   const slides = [
     { 
       src: "https://images.unsplash.com/photo-1547347298-4074fc3086f0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80", 
@@ -19,15 +22,15 @@ export const ImageSlider = () => {
       alt: "Badminton tournament" 
     },
     { 
-      src: "/src/assets/images/img21.jpg", 
+      src: "assets/images/img21.jpg", 
       alt: "Badminton court action" 
     },
     { 
-      src: "/src/assets/images/img22.jpg", 
+      src: "assets/images/img22.jpg", 
       alt: "Badminton court action" 
     },
     { 
-      src: "/src/assets/images/img23.jpg", 
+      src: "assets/images/img23.jpg", 
       alt: "Badminton court action" 
     },
   ];
@@ -40,6 +43,7 @@ export const ImageSlider = () => {
         loop={true}
         spaceBetween={0}
         slidesPerView={1}
+        className="image-control"
       >
         {slides.map((img, idx) => (
           <SwiperSlide key={idx}>
@@ -47,7 +51,7 @@ export const ImageSlider = () => {
               <img src={img.src} alt={img.alt}  className="slider-image py-2"/>
               <div className="overlay">
                 <div className="content-wrapper">
-                  <img className="logo" src="/src/assets/Picture2.png" alt="Bijoy Institute Logo" />
+                  <img className="logo" src="assets/Picture2.png" alt="Bijoy Institute Logo" />
                   <h1>Bijoy Institute Giridih</h1>
                   <p>
                     Founded in 1938, Bijoy Institute has been a pioneering force in nurturing badminton talent. 
@@ -55,7 +59,7 @@ export const ImageSlider = () => {
                     badminton training institutes, producing skilled athletes who excel in national and 
                     international competitions.
                   </p>
-                  <button className="cta-button">Join Our Academy</button>
+                  <button className="cta-button" onClick={()=>navigate('/admission')}>Join Our Academy</button>
                 </div>
               </div>
             </div>
